@@ -8,10 +8,11 @@
  *
  * */
 
-ForceVis = function(_parentElement, _data, _eventHandler){
+ForceVis = function(_parentElement, _data, _metaData, _eventHandler){
     var that = this
     this.parentElement = _parentElement;
     this.eventHandler = _eventHandler;
+    this.metaData = _metaData
     this.data = _data;
     this.displayData = [];
 

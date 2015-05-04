@@ -22,6 +22,7 @@
             <script src = "js/force.js"></script>
             <script src = "js/item_bar.js"></script>
             <script src = "js/KDA.js"></script>
+            <script src = "js/game_duration.js"></script>
         
             <!-- add own stylesheet-->
             <!--link rel="stylesheet" type="text/css" href="css/myStyle.css">-->
@@ -32,12 +33,16 @@
             <div id = "force_filter">
                 
             </div>
+            <div id = "durationArea">
+                
+            </div>
             <div id = "barVis">
                 
             </div>
             <div id = "KDAVis">
                 
             </div>
+            
         </body>
         
         <script>
@@ -64,7 +69,8 @@
     
                     
                     var MyEventHandler = new Object();
-                    var force = new ForceVis(d3.select("#force_filter"), allData, MyEventHandler);
+                    
+                    var force = new ForceVis(d3.select("#force_filter"), allData, metaData, MyEventHandler);
                     //var duration_area = new DurationVis(d3.select("durationVis"), allData);
                     var bar_items = new BarVis(d3.select("#barVis"), allData);
                     // var kda_area = new AreaVis(d3.select("kdaAreaVis"), allData)
@@ -72,10 +78,18 @@
                     console.log(metaData)
                     console.log(d3.select("#KDAVis"))
                     var MyKDAVis = new KDAVis(d3.select("#KDAVis"), allData, metaData);
-
+                    var game_vis = new DurationVis(d3.select("#durationArea"), allData, metaData, MyEventHandler);
+                    
+                    $(MyEventHandler).bind("brushed", function(event, data) {
+                        
+                        
+                    })
+                    
+                    
                     $(MyEventHandler).bind("selectionChanged", function(event, selected){
                         MyKDAVis.onSelectionChange(selected);
                     });
+                    
                     
     
                 }
@@ -108,7 +122,6 @@
                     queue()
                         .defer(d3.json, 'data/master_json_small.json')
                         .defer(d3.json, 'data/meta_data.json')
-                    //    .defer(d3.json, 'data/MYWorld_fields.json')
                         .await(dataLoaded)
                     
                     
