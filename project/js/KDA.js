@@ -25,7 +25,7 @@ KDAVis.prototype.initVis = function(){
     this.width = 650;
     this.height = 500;
 
-    console.log(this.data)
+    //console.log(this.data)
     var kills = []
     var assists = []
     var deaths = []
@@ -94,7 +94,7 @@ KDAVis.prototype.initVis = function(){
 }
 
 KDAVis.prototype.updateVis = function(){
-	var that = this
+    var that = this
 
     this.x_min = 0
     this.x_max = 0
@@ -104,6 +104,7 @@ KDAVis.prototype.updateVis = function(){
     //this.brushStart = 600
     //this.brushEnd = 1900
     console.log(that.brushStart, that.brushEnd)
+    console.log(that.displayData)
     if (that.brushEnd > that.brushStart) {
         for (i in that.displayData) {
             var duration_indices = []

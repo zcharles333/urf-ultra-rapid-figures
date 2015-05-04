@@ -86,6 +86,9 @@ ForceVis.prototype.initVis = function(){
     //this.nodes.append("circle")
     //    .attr("r", function(d) {d.radius = radScale(winRateData[d.id]) ; return d.radius; })
     
+    
+    
+    
     this.nodes.append("clipPath")
         .attr("id", "cut-off")
         .append("circle")
@@ -100,6 +103,7 @@ ForceVis.prototype.initVis = function(){
             d.radius = radScale(winRateData[d.id])
             return radScale(winRateData[d.id])
         })
+    
         //.style("stroke-width", "5px")
         //.style("stroke", "black")
     
@@ -115,7 +119,23 @@ ForceVis.prototype.initVis = function(){
         })
         .attr("clip-path", "url(#cut-off)")
         .attr("class", "circ")
+        
         //.style("border-radius", "50%")
+    this.nodes.append("circle")
+        .attr("id", "temp")
+        .attr("cx", function(d){
+    
+            return radScale(winRateData[d.id]) 
+        })
+        .attr("cy", function(d,i){
+            return radScale(winRateData[d.id]) 
+        })
+        .attr("r", function(d,i){
+            d.radius = radScale(winRateData[d.id])
+            return radScale(winRateData[d.id])
+        })
+        .attr("fill", "red")
+        .style("opacity", "0.5")
 
     
     this.nodes
@@ -291,11 +311,14 @@ ForceVis.prototype.updateVis = function(){
     
     var that = this
     
+    
+    
 }
 ForceVis.prototype.onSelectionChange = function(data) {
     
-    
-    
+    this.brushStart = data[0]
+    this.brushEnd = data[1]
+    this.updateVis();
 }
 
 
