@@ -17,9 +17,9 @@ ForceVis = function(_parentElement, _data){
     
     // TODO: define all constants here
     this.margin = 30
-    this.height = 600
-    this.width = 600
-
+    this.height = 700
+    this.width = 800
+    this.clicked = []
     this.initVis();
 
 }
@@ -40,48 +40,153 @@ ForceVis.prototype.initVis = function(){
         .append("svg")
         .attr("width", this.width + this.margin)
         .attr("height", this.height + this.margin)
+        //.style("background", "lightgray")
         
     this.graph = this.svg.append("g")
         .attr("transform", "translate(" + that.margin + "," + 0 + ")")
     
     this.forcedata = {nodes:[], links: []}
     this.forcedata.nodes = that.data
-    
+
     this.nodes = that.graph.selectAll(".node")
         .data(that.forcedata.nodes)
         .enter()
         .append("g").attr("class", function(d){return "node n" + d["id"]})
-        
+    var winRateData = new Object()
+    var winRateList = []
+    console.log(that.data)
+    this.forcedata.nodes.forEach(function(d){
+        var winLength = d.unique.winner.length
+        var winCount = 0
+        for (var i = 0; i < winLength; i ++) {
+            if (d.unique.winner[i] == true) {
+                winCount++;
+            }
+        }
+        winRateData[d["id"]] = winCount* 100/winLength
+        winRateList.push(winCount* 100/winLength)
+    })
+    
+    var maxWin = d3.max(winRateList)
+    var minWin = d3.min(winRateList)
+    console.log(maxWin)
+    console.log(minWin)
+    
+    var radScale = d3.scale.pow()
+        .exponent(4)
+        .domain([minWin, maxWin])
+        .range([10,30])
+    var opacityScale = d3.scale.pow()
+        .exponent(4)
+        .domain([minWin, maxWin])
+        .range([0.3,1])
+    
+    //this.nodes.append("circle")
+    //    .attr("r", function(d) {d.radius = radScale(winRateData[d.id]) ; return d.radius; })
+    
     this.nodes.append("clipPath")
         .attr("id", "cut-off")
         .append("circle")
-        .attr("cx", 15)
-        .attr("cy", 15)
-        .attr("r", 15)
-        
-                
+        .attr("cx", function(d){
+    
+            return radScale(winRateData[d.id]) 
+        })
+        .attr("cy", function(d,i){
+            return radScale(winRateData[d.id]) 
+        })
+        .attr("r", function(d,i){
+            d.radius = radScale(winRateData[d.id])
+            return radScale(winRateData[d.id])
+        })
+        //.style("stroke-width", "5px")
+        //.style("stroke", "black")
+    
     this.nodes.append("image")
         .attr("xlink:href", function(d){
             return "img/champions/" + d["id"] + "_Web_0.jpg"    
         })
-        .attr("width", 30)
-        .attr("height", 30)
+        .attr("width", function(d,i){
+            return (radScale(winRateData[d.id]))  * 2
+        })
+        .attr("height", function(d,i){
+            return (radScale(winRateData[d.id]))*2
+        })
         .attr("clip-path", "url(#cut-off)")
         .attr("class", "circ")
-        .style("border-radius", "50%")
-        .style("stroke", "black")
-        
+        //.style("border-radius", "50%")
+
+    
+    this.nodes
+        .style("opacity", function(d){
+            return opacityScale(winRateData[d.id])
+        })
+        .style("cursor", "hand")
+        //.on("mouseover", function(d){
+        //    that.nodes.style("opacity", "0.5")
+        //    d3.select(this).style("opacity", "1")
+        //    
+        //    
+        //})
+        //.on("mouseout", function(d){
+        //    that.nodes
+        //        .style("opacity", function(d){
+        //            return opacityScale(winRateData[d.id])
+        //        })
+        //    
+        //})
+        .on("click", function(d){
+            var index = that.clicked.indexOf(d)
+            if (index != -1) {
+                that.clicked.splice(index,1)
+            }
+            else {
+                that.clicked.push(d)
+            }
+            
+            if (that.clicked.length > 5) {
+                that.clicked.splice(0,1)
+            }
+            
+            that.force
+                .charge(function(d, i) { return (that.clicked.indexOf(d) != -1) ? -3000/that.clicked.length : 0; })
+                .links(createLinks(that.clicked))
+            
+            that.force.start()
+            
+            that.selectedChamps.remove()
+            
+            that.selectedChamps = that.displayer.selectAll(".selected")
+                .data(that.clicked)
+                .enter().append("text")
+                .attr("class", "selected")
+                .attr("x", 20)
+                .attr("y", function(d,i){return 30 * i + 60})
+                .text(function(d,i){return (i+1) + ". " + d.id})
+            
+            
+            console.log(that.clicked)
+        })
         
     this.force = d3.layout.force()
         .size([that.width, that.height])
-        .charge(-50)
-        .linkStrength(0)
-        .on("tick", function(d) {
+        .charge(function(d, i) { return 0})
+        //.charge(function(d){return -Math.pow(d.radius,2)/10})
+        .linkDistance(10)
+        .gravity(0.05)
+        .on("tick", function(e) {
+            var k = 6 * e.alpha
+            
+            var q = d3.geom.quadtree(that.forcedata.nodes),
+                j = 0,
+                n = that.forcedata.nodes.length;
+            
+            while (++j < n) q.visit(collide(that.forcedata.nodes[j]));
+            
             that.nodes
-                .transition().duration(0)
-                .attr("transform", function(d) {
-                    
-                    return "translate("+d.x+","+d.y+")"; 
+                .transition().duration(50)
+                .attr("transform", function(d,i) {
+                    d.x += -k 
+                    return "translate("+(d.x - (radScale(winRateData[d.id]))) +","+(d.y - (radScale(winRateData[d.id])))+")"; 
                 });
 
             
@@ -94,9 +199,33 @@ ForceVis.prototype.initVis = function(){
         .links([])
         .start();
     
-    this.nodes
-        .call(that.force.drag)
-    //console.log(that.keys)
+    
+    
+    this.displayer = that.graph.append("g")
+        .attr("transform", "translate(" + (that.width - 175) + "," + (that.height - 200) + ")")
+              
+    this.displayer.append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("rx", 20)
+        .attr("ry", 20)
+        .attr("width", 175)
+        .attr("height", 200)
+        .attr("fill", "white")
+        .style("stroke", "black")
+    
+    this.displayer.append("text")
+        .attr("x", 20)
+        .attr("y", 30)
+        .text("Selected Champions")
+    
+    this.selectedChamps = that.displayer.selectAll(".selected")
+    
+    
+    
+    
+    
+    
     
     // filter, aggregate, modify data
     this.wrangleData(null);
@@ -104,7 +233,41 @@ ForceVis.prototype.initVis = function(){
     // call the update method
     this.updateVis();
 }
+function createLinks(links) {
+    var linkArray = []
+    for (var i = 0; i < links.length; i ++) {
+        for (var j = i+1; j < links.length; j ++) {
+            var link = {source: links[i], target: links[j]}
+            linkArray.push(link)
+        }
+    }
+    return linkArray
+}
 
+
+function collide(node) {
+    var r = node.radius,
+        nx1 = node.x - r,
+        nx2 = node.x + r,
+        ny1 = node.y - r,
+        ny2 = node.y + r;
+    return function(quad, x1, y1, x2, y2) {
+        if (quad.point && (quad.point !== node)) {
+            var x = node.x - quad.point.x,
+                y = node.y - quad.point.y,
+                l = Math.sqrt(x * x + y * y),
+                r = node.radius + quad.point.radius;
+            if (l < r) {
+                l = (l - r) / l * .5;
+                node.x -= x *= l;
+                node.y -= y *= l;
+                quad.point.x += x;
+                quad.point.y += y;
+            }
+        }
+        return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+    };
+}
 
 /**
  * Method to wrangle the data. In this case it takes an options object
