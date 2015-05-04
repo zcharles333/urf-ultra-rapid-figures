@@ -16,6 +16,8 @@ ForceVis = function(_parentElement, _data, _metaData, _eventHandler){
     this.data = _data;
     this.displayData = [];
 
+    this.brushStart = 0
+    this.brushEnd = 0
     
     // TODO: define all constants here
     this.margin = 30
@@ -54,7 +56,7 @@ ForceVis.prototype.initVis = function(){
         .data(that.forcedata.nodes)
         .enter()
         .append("g").attr("class", function(d){return "node n" + d["id"]})
-    var winRateData = new Object()
+    this.winRateData = new Object()
     var winRateList = []
     console.log(that.data)
     this.forcedata.nodes.forEach(function(d){
@@ -65,9 +67,10 @@ ForceVis.prototype.initVis = function(){
                 winCount++;
             }
         }
-        winRateData[d["id"]] = winCount* 100/winLength
+        that.winRateData[d["id"]] = winCount* 100/winLength
         winRateList.push(winCount* 100/winLength)
     })
+    this.defaultWinRateData = that.winRateData
     
     var maxWin = d3.max(winRateList)
     var minWin = d3.min(winRateList)
@@ -91,14 +94,14 @@ ForceVis.prototype.initVis = function(){
         .append("circle")
         .attr("cx", function(d){
     
-            return radScale(winRateData[d.id]) 
+            return radScale(that.winRateData[d.id]) 
         })
         .attr("cy", function(d,i){
-            return radScale(winRateData[d.id]) 
+            return radScale(that.winRateData[d.id]) 
         })
         .attr("r", function(d,i){
-            d.radius = radScale(winRateData[d.id])
-            return radScale(winRateData[d.id])
+            d.radius = radScale(that.winRateData[d.id])
+            return radScale(that.winRateData[d.id])
         })
         //.style("stroke-width", "5px")
         //.style("stroke", "black")
@@ -108,10 +111,10 @@ ForceVis.prototype.initVis = function(){
             return "img/champions/" + d["id"] + "_Web_0.jpg"    
         })
         .attr("width", function(d,i){
-            return (radScale(winRateData[d.id]))  * 2
+            return (radScale(that.winRateData[d.id]))  * 2
         })
         .attr("height", function(d,i){
-            return (radScale(winRateData[d.id]))*2
+            return (radScale(that.winRateData[d.id]))*2
         })
         .attr("clip-path", "url(#cut-off)")
         .attr("class", "circ")
@@ -120,7 +123,7 @@ ForceVis.prototype.initVis = function(){
     
     this.nodes
         .style("opacity", function(d){
-            return opacityScale(winRateData[d.id])
+            return opacityScale(that.winRateData[d.id])
         })
         .style("cursor", "hand")
         //.on("mouseover", function(d){
@@ -190,7 +193,7 @@ ForceVis.prototype.initVis = function(){
                 .transition().duration(50)
                 .attr("transform", function(d,i) {
                     d.x += -k 
-                    return "translate("+(d.x - (radScale(winRateData[d.id]))) +","+(d.y - (radScale(winRateData[d.id])))+")"; 
+                    return "translate("+(d.x - (radScale(that.winRateData[d.id]))) +","+(d.y - (radScale(that.winRateData[d.id])))+")"; 
                 });
 
             
@@ -286,10 +289,40 @@ ForceVis.prototype.wrangleData= function(_filterFunction){
 
 }
 
+ForceVis.prototype.brushChange= function (start, end){
+    this.brushStart = start
+    this.brushEnd = end
+    console.log(this.winRateData)
+    this.updateVis();
+}
+
 // update visualzation
 ForceVis.prototype.updateVis = function(){
-    
     var that = this
+
+    this.winArrays = {}
+    if (that.brushStart < that.brushEnd) {
+
+        for (i in that.data) {
+            var duration_indices = []
+            for (ele in that.data[i].unique.duration) {
+                if (that.data[i].unique.duration[ele] >= that.brushStart && that.data[i].unique.duration[ele] <= that.brushEnd) {
+                    duration_indices.push(ele)
+                }
+            }
+            that.winArrays[that.data[i].id] = duration_indices.map(function(d) {
+                return that.data[i].unique.winner[d]
+            })
+        }
+        var keys = Object.keys(that.winArrays)
+        for (ele in keys) {
+            that.testWinRateData[keys[ele]] = _.countBy(that.winArrays[keys[ele]])["1"] / that.winArrays[keys[ele]].length
+        }
+    }
+    else {
+        this.testWinRateData = that.defaultWinRateData
+    }
+    console.log(that.testWinRateData)
     
     
 }
