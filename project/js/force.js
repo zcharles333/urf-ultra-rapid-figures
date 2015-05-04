@@ -123,23 +123,9 @@ ForceVis.prototype.initVis = function(){
         .attr("class", "circ")
         
         //.style("border-radius", "50%")
-<<<<<<< HEAD
-    this.nodes.append("circle")
-        .attr("id", "temp")
-        .attr("cx", function(d){
-    
-            return radScale(that.winRateData[d.id]) 
-        })
-        .attr("cy", function(d,i){
-            return radScale(that.winRateData[d.id]) 
-        })
-        .attr("r", function(d,i){
-            d.radius = radScale(that.winRateData[d.id])
-            return radScale(that.winRateData[d.id])
-        })
-        .attr("fill", "red")
-        .style("opacity", "0.5")
-=======
+
+
+
     //this.nodes.append("circle")
     //    .attr("id", "temp")
     //    .attr("cx", function(d){
@@ -155,7 +141,7 @@ ForceVis.prototype.initVis = function(){
     //    })
     //    .attr("fill", "red")
     //    .style("opacity", "0.5")
->>>>>>> c86babdbfed186c058b6479a430273149fbdfe8b
+
 
     
     this.nodes
@@ -363,9 +349,7 @@ ForceVis.prototype.updateVis = function(){
     else {
         this.testWinRateData = that.defaultWinRateData
     }
-<<<<<<< HEAD
-=======
-    
+
     
     //this.clips.remove()
     //this.images.remove()
@@ -405,7 +389,7 @@ ForceVis.prototype.updateVis = function(){
     //    .attr("clip-path", "url(#cut-off)")
     //    .attr("class", "circ")
     //
->>>>>>> c86babdbfed186c058b6479a430273149fbdfe8b
+
     
     
     
