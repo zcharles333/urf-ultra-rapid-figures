@@ -92,6 +92,9 @@
                         MyKDAVis.onSelectionChange(selected);
                     });
 
+                    $(MyEventHandler).bind("brushed", function(event, start, end){
+                        MyKDAVis.brushChange(start,end);
+                    });
 
                     $(MyEventHandler).bind("kdaRadioChange", function(event, selected){
                         MyKDAVis.kdaRadioChange(selected);
