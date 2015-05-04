@@ -128,14 +128,14 @@ ForceVis.prototype.initVis = function(){
         .attr("id", "temp")
         .attr("cx", function(d){
     
-            return radScale(winRateData[d.id]) 
+            return radScale(that.winRateData[d.id]) 
         })
         .attr("cy", function(d,i){
-            return radScale(winRateData[d.id]) 
+            return radScale(that.winRateData[d.id]) 
         })
         .attr("r", function(d,i){
-            d.radius = radScale(winRateData[d.id])
-            return radScale(winRateData[d.id])
+            d.radius = radScale(that.winRateData[d.id])
+            return radScale(that.winRateData[d.id])
         })
         .attr("fill", "red")
         .style("opacity", "0.5")
@@ -312,7 +312,6 @@ ForceVis.prototype.wrangleData= function(_filterFunction){
 ForceVis.prototype.brushChange= function (start, end){
     this.brushStart = start
     this.brushEnd = end
-    console.log(this.winRateData)
     this.updateVis();
 }
 
@@ -342,7 +341,6 @@ ForceVis.prototype.updateVis = function(){
     else {
         this.testWinRateData = that.defaultWinRateData
     }
-    console.log(that.testWinRateData)
     
     
     
