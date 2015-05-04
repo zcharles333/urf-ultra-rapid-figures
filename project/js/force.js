@@ -291,6 +291,10 @@ ForceVis.prototype.updateVis = function(){
     
     var that = this
     
+}
+ForceVis.prototype.onSelectionChange = function(data) {
+    
+    
     
 }
 

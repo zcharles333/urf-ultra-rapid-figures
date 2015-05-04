@@ -83,7 +83,7 @@
                     var game_vis = new DurationVis(d3.select("#durationArea"), allData, metaData, MyEventHandler);
                     
                     $(MyEventHandler).bind("brushed", function(event, data) {
-                        
+                        force.onSelectionChange(data)
                         
                     })
                     
