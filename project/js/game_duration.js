@@ -119,7 +119,7 @@ DurationVis.prototype.wrangleData= function(){
         var temp = this.data[ele].unique.duration.map(function(d){return Math.floor(d/100) * 100})
         durations = durations.concat(temp)
     }
-    console.log(durations)
+    
     this.durationCounts = _.countBy(durations)
     
     this.niceDuration = d3.entries(this.durationCounts)
