@@ -265,6 +265,12 @@ KDAVis.prototype.kdaRadioChange= function (selected){
     this.updateVis();
 }
 
+KDAVis.prototype.brushChange= function (start, end){
+    this.brushStart = start
+    this.brushEnd = end
+    this.updateVis();
+}
+
 KDAVis.prototype.wrangleData= function(_filterFunction){
     // displayData should hold the data which is visualized
     //this.displayData = this.filterAndAggregate(_filterFunction);
