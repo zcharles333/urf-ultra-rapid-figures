@@ -94,6 +94,7 @@
 
                     $(MyEventHandler).bind("brushed", function(event, start, end){
                         MyKDAVis.brushChange(start,end);
+                        force.brushChange(start,end);
                     });
 
                     $(MyEventHandler).bind("kdaRadioChange", function(event, selected){

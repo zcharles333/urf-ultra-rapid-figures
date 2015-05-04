@@ -46,7 +46,8 @@ KDAVis.prototype.initVis = function(){
 
 
     this.displayData = [this.defaultData];
-    this.defaultName = ["Average"]
+    this.defaultName = "Average"
+    this.displayNames = [this.defaultName]
 
     // this.descriptions = []
     // for (var i=100;i<116;i++) {
@@ -103,8 +104,10 @@ KDAVis.prototype.updateVis = function(){
     var displayArray = []
     //this.brushStart = 600
     //this.brushEnd = 1900
+
     console.log(that.brushStart, that.brushEnd)
     console.log(that.displayData)
+
     if (that.brushEnd > that.brushStart) {
         for (i in that.displayData) {
             var duration_indices = []
@@ -132,7 +135,7 @@ KDAVis.prototype.updateVis = function(){
     var percentages = []
     for (var ele in displayArray) {
         count_dicts.push(_.countBy(displayArray[ele]))
-        console.log(count_dicts[ele])
+        // console.log(count_dicts[ele])
         keys.push(Object.keys(count_dicts[ele]).map(function(key) {return parseInt(key);}))
         values.push(keys[ele].map(function(key){return count_dicts[ele][key];}))
         sums.push(d3.sum(values[ele]))
@@ -147,8 +150,8 @@ KDAVis.prototype.updateVis = function(){
         this.y_min = d3.min([that.y_min,d3.min(percentages[ele])])
         this.y_max = d3.max([that.y_max,d3.max(percentages[ele])])
     }
-    console.log(keys)
-    console.log(that.tuple_arrays)
+    // console.log(keys)
+    // console.log(that.tuple_arrays)
 
     this.x_scale
         .domain([that.x_min,that.x_max]);
@@ -169,10 +172,13 @@ KDAVis.prototype.updateVis = function(){
         .append("g")
             .attr("class","kda")
 
+    color_scale = d3.scale.category10()
+        .domain([0,1,2,3,4])
+
     this.kda.append("path")
         .attr("class","line")
         .attr("d",function(d) {return that.lines(d)})
-        .style("stroke", function(d,i){return "blue"})
+        .style("stroke", function(d,i){return color_scale(i);})
         .style("stroke-width", "1px")
         .style("fill", "none")
 
@@ -242,6 +248,7 @@ KDAVis.prototype.onSelectionChange= function (selected){
  //    else {
  //        this.wrangleData(null);
  //    }
+    this.displayNames = []
     if (selected.length) {
         this.displayData = []
         for (ele in selected) {
@@ -251,12 +258,13 @@ KDAVis.prototype.onSelectionChange= function (selected){
             placeholder["deaths"] = (selected[ele].unique.deaths)
             placeholder["durations"] = (selected[ele].unique.duration)
             this.displayData.push(placeholder)
+            this.displayNames.push(this.metaData["champions"][selected[ele]["id"]])
         }
     }
     else {
         this.displayData = [this.defaultData]
+        this.displayNames = [this.defaultName]
     }
-    console.log(this.displayData)
     this.updateVis();
 }
 
