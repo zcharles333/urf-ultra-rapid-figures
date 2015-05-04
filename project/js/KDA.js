@@ -42,7 +42,7 @@ KDAVis.prototype.initVis = function(){
     this.defaultData["assists"] = assists
     this.defaultData["deaths"] = deaths
     this.defaultData["durations"] = durations
-    console.log(this.defaultData)
+    
 
 
     this.displayData = [this.defaultData];
@@ -105,8 +105,6 @@ KDAVis.prototype.updateVis = function(){
     //this.brushStart = 600
     //this.brushEnd = 1900
 
-    console.log(that.brushStart, that.brushEnd)
-    console.log(that.displayData)
 
     if (that.brushEnd > that.brushStart) {
         for (i in that.displayData) {
@@ -269,7 +267,7 @@ KDAVis.prototype.onSelectionChange= function (selected){
 }
 
 KDAVis.prototype.kdaRadioChange= function (selected){
-    console.log(selected)
+    
     this.kda_selection = selected
     this.updateVis();
 }

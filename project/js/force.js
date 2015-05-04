@@ -58,7 +58,7 @@ ForceVis.prototype.initVis = function(){
         .append("g").attr("class", function(d){return "node n" + d["id"]})
     this.winRateData = new Object()
     var winRateList = []
-    console.log(that.data)
+    
     this.forcedata.nodes.forEach(function(d){
         var winLength = d.unique.winner.length
         var winCount = 0
@@ -74,10 +74,9 @@ ForceVis.prototype.initVis = function(){
     
     var maxWin = d3.max(winRateList)
     var minWin = d3.min(winRateList)
-    console.log(maxWin)
-    console.log(minWin)
     
-    var radScale = d3.scale.pow()
+    
+    this.radScale = d3.scale.pow()
         .exponent(4)
         .domain([minWin, maxWin])
         .range([10,30])
@@ -92,38 +91,39 @@ ForceVis.prototype.initVis = function(){
     
     
     
-    this.nodes.append("clipPath")
+    this.clips = this.nodes.append("clipPath")
         .attr("id", "cut-off")
         .append("circle")
         .attr("cx", function(d){
     
-            return radScale(that.winRateData[d.id]) 
+            return that.radScale(that.winRateData[d.id]) 
         })
         .attr("cy", function(d,i){
-            return radScale(that.winRateData[d.id]) 
+            return that.radScale(that.winRateData[d.id]) 
         })
         .attr("r", function(d,i){
-            d.radius = radScale(that.winRateData[d.id])
-            return radScale(that.winRateData[d.id])
+            d.radius = that.radScale(that.winRateData[d.id])
+            return that.radScale(that.winRateData[d.id])
         })
     
         //.style("stroke-width", "5px")
         //.style("stroke", "black")
     
-    this.nodes.append("image")
+    this.images = this.nodes.append("image")
         .attr("xlink:href", function(d){
             return "img/champions/" + d["id"] + "_Web_0.jpg"    
         })
         .attr("width", function(d,i){
-            return (radScale(that.winRateData[d.id]))  * 2
+            return (that.radScale(that.winRateData[d.id]))  * 2
         })
         .attr("height", function(d,i){
-            return (radScale(that.winRateData[d.id]))*2
+            return (that.radScale(that.winRateData[d.id]))*2
         })
         .attr("clip-path", "url(#cut-off)")
         .attr("class", "circ")
         
         //.style("border-radius", "50%")
+<<<<<<< HEAD
     this.nodes.append("circle")
         .attr("id", "temp")
         .attr("cx", function(d){
@@ -139,6 +139,23 @@ ForceVis.prototype.initVis = function(){
         })
         .attr("fill", "red")
         .style("opacity", "0.5")
+=======
+    //this.nodes.append("circle")
+    //    .attr("id", "temp")
+    //    .attr("cx", function(d){
+    //
+    //        return radScale(that.winRateData[d.id]) 
+    //    })
+    //    .attr("cy", function(d,i){
+    //        return radScale(that.winRateData[d.id]) 
+    //    })
+    //    .attr("r", function(d,i){
+    //        d.radius = radScale(that.winRateData[d.id])
+    //        return radScale(that.winRateData[d.id])
+    //    })
+    //    .attr("fill", "red")
+    //    .style("opacity", "0.5")
+>>>>>>> c86babdbfed186c058b6479a430273149fbdfe8b
 
     
     this.nodes
@@ -189,7 +206,7 @@ ForceVis.prototype.initVis = function(){
                 .text(function(d,i){return (i+1) + ". " + d.id})
             
             
-            console.log(that.clicked)
+            
 
             selectedChampsChange()
         })
@@ -212,8 +229,12 @@ ForceVis.prototype.initVis = function(){
             that.nodes
                 .transition().duration(50)
                 .attr("transform", function(d,i) {
-                    d.x += -k 
-                    return "translate("+(d.x - (radScale(that.winRateData[d.id]))) +","+(d.y - (radScale(that.winRateData[d.id])))+")"; 
+                    d.x += -k
+                    //d.radius = that.radScale(that.testWinRateData[d.id])
+                    //if (isNaN(d.radius)) {
+                    //    d.radius = that.radScale.domain()[0]
+                    //}
+                    return "translate("+(d.x - (d.radius)) +","+(d.y - (d.radius))+")"; 
                 });
 
             
@@ -312,6 +333,7 @@ ForceVis.prototype.wrangleData= function(_filterFunction){
 ForceVis.prototype.brushChange= function (start, end){
     this.brushStart = start
     this.brushEnd = end
+
     this.updateVis();
 }
 
@@ -341,6 +363,49 @@ ForceVis.prototype.updateVis = function(){
     else {
         this.testWinRateData = that.defaultWinRateData
     }
+<<<<<<< HEAD
+=======
+    
+    
+    //this.clips.remove()
+    //this.images.remove()
+    console.log(that.testWinRateData)
+    //
+    //this.clips = this.nodes.append("clipPath")
+    //    .attr("id", "cut-off")
+    //    .append("circle")
+    //    .attr("cx", function(d){
+    //        d.radius = that.radScale(that.testWinRateData[d.id])
+    //        if (isNaN(d.radius)) {
+    //            d.radius = that.radScale.domain()[0]
+    //        }
+    //        return d.radius
+    //    })
+    //    .attr("cy", function(d,i){
+    //        return d.radius
+    //    })
+    //    .attr("r", function(d,i){
+    //        
+    //        return d.radius
+    //    })
+    //
+    //    //.style("stroke-width", "5px")
+    //    //.style("stroke", "black")
+    //
+    //this.images = this.nodes.append("image")
+    //    .attr("xlink:href", function(d){
+    //        return "img/champions/" + d["id"] + "_Web_0.jpg"    
+    //    })
+    //    .attr("width", function(d,i){
+    //        return d.radius  * 2
+    //    })
+    //    .attr("height", function(d,i){
+    //        return d.radius*2
+    //    })
+    //    .attr("clip-path", "url(#cut-off)")
+    //    .attr("class", "circ")
+    //
+>>>>>>> c86babdbfed186c058b6479a430273149fbdfe8b
     
     
     
