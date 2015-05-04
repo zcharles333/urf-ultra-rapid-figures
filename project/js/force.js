@@ -8,9 +8,10 @@
  *
  * */
 
-ForceVis = function(_parentElement, _data){
+ForceVis = function(_parentElement, _data, _eventHandler){
     var that = this
     this.parentElement = _parentElement;
+    this.eventHandler = _eventHandler;
     this.data = _data;
     this.displayData = [];
 
@@ -165,6 +166,8 @@ ForceVis.prototype.initVis = function(){
             
             
             console.log(that.clicked)
+
+            selectedChampsChange()
         })
         
     this.force = d3.layout.force()
@@ -221,9 +224,9 @@ ForceVis.prototype.initVis = function(){
     
     this.selectedChamps = that.displayer.selectAll(".selected")
     
-    
-    
-    
+    function selectedChampsChange() {
+        $(that.eventHandler).trigger("selectionChanged", [that.clicked]);
+    }
     
     
     
@@ -268,6 +271,8 @@ function collide(node) {
         return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
     };
 }
+
+
 
 /**
  * Method to wrangle the data. In this case it takes an options object

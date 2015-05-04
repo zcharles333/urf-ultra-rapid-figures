@@ -17,7 +17,7 @@ BarVis = function(_parentElement, _data){
     
     // TODO: define all constants here
     this.margin = 30
-    this.height = 600
+    this.height = 70
     this.width = 600
 
     this.initVis();
