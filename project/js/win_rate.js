@@ -82,14 +82,6 @@ WinRateVis.prototype.initVis = function(){
         .style("fill","blue")
         .style("cursor","hand")
         .on("click", function(d) {
-            // var index = that.selectedChamps.indexOf(d[1])
-            // if (index >= 0){
-            //     that.selectedChamps.splice(index,1)
-            // }
-            // else {
-            //     that.selectedChamps.push(d[1])
-            // }
-            // that.clickChange()
             that.clickChange(d[1])
         })
         .on("mouseover", function(d) {
@@ -130,10 +122,7 @@ WinRateVis.prototype.initVis = function(){
             d3.select(this).style("fill",function(d) {return that.color_bar(d)})
             that.tooltipGroup.style("display", "none")
         })
-	.on("click", function(d){
-	    console.log(d)
-	    
-	})
+
 
     this.draw_yAxis = this.svg.append("g")
         .attr("class", "y axis")
