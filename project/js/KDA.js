@@ -22,7 +22,7 @@ KDAVis.prototype.initVis = function(){
 
     var that = this; // read about the this
 
-    this.width = 400;
+    this.width = 450;
     this.height = 300;
 
     //console.log(this.data)
@@ -102,10 +102,6 @@ KDAVis.prototype.initVis = function(){
         .attr("transform", "translate(0," + (that.height - that.y_margin) +")")
         .call(this.xAxis)
 
-    this.draw_xAxis
-        .selectAll(".tick").select("text")
-            .attr("transform", "rotate(-70) translate(-10,-10)")
-            .style("text-anchor","end")
 
     this.draw_yAxis = this.svg.append("g")
         .attr("class", "y axis")
