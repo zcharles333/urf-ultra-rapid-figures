@@ -46,8 +46,11 @@
             
             </div>-->
             <div id = "winArea">
-
-                
+                <form action="">
+                <input type="radio" name="win" value="descending" checked>Descending
+                <input type="radio" name="win" value="ascending">Ascending
+                <input type="radio" name="win" value="alphabetical">Alphabetical
+                </form>
             </div>
             <div id = "KDAVis">
                 <form action="">
@@ -55,7 +58,6 @@
                 <input type="radio" name="kda" value="deaths">Deaths
                 <input type="radio" name="kda" value="assists">Assists
                 </form>
-                
             </div>
             
         </body>
@@ -122,15 +124,16 @@
                     $(MyEventHandler).bind("brushed", function(event, start, end){
                         MyKDAVis.brushChange(start,end);
                         force.brushChange(start,end);
-
                         profiles.brushChange(start,end);
-
                         MyWinVis.brushChange(start,end);
-
                     });
 
                     $(MyEventHandler).bind("kdaRadioChange", function(event, selected){
                         MyKDAVis.kdaRadioChange(selected);
+                    });
+
+                    $(MyEventHandler).bind("winSortChange", function(event, selected){
+                        MyWinVis.winSortChange(selected);
                     });
 
                     d3.selectAll("input[type='radio'][name='kda']")
@@ -138,8 +141,17 @@
                             d3.selectAll("input[type='radio'][name='kda']")
                                 .each(function() {
                                     if(d3.select(this).property("checked")) {
-                                        //encoder = d3.select(this).attr("value")
                                         $(MyEventHandler).trigger("kdaRadioChange", d3.select(this).attr("value"));
+                                    }
+                                })
+                        })
+
+                    d3.selectAll("input[type='radio'][name='win']")
+                        .on("change", function() {
+                            d3.selectAll("input[type='radio'][name='win']")
+                                .each(function() {
+                                    if(d3.select(this).property("checked")) {
+                                        $(MyEventHandler).trigger("winSortChange", d3.select(this).attr("value"));
                                     }
                                 })
                         })

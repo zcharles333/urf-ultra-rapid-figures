@@ -35,10 +35,10 @@ WinRateVis.prototype.initVis = function(){
     //     this.defaultdisplayDict[this.data[ele].id] = 
     // }
 
-    this.winData = {}
-    for (ele in this.data) {
-        this.winData[this.data[ele].id] = _.countBy(that.data[ele].unique.winner)['1'] / that.data[ele].unique.winner.length
-    }
+    // this.winData = {}
+    // for (ele in this.data) {
+    //     this.winData[this.data[ele].id] = _.countBy(that.data[ele].unique.winner)['1'] / that.data[ele].unique.winner.length
+    // }
     //console.log(that.winData)
 
     //TODO: construct or select SVG
@@ -58,7 +58,7 @@ WinRateVis.prototype.initVis = function(){
 
     this.y_scale = d3.scale.linear()
         .range([that.height-that.y_margin,0]);
-    console.log(this.y_scale.range())
+    //console.log(this.y_scale.range())
     this.g = this.svg.append("g")
     	.attr("transform", "translate(0,0)")
 
@@ -78,6 +78,13 @@ WinRateVis.prototype.initVis = function(){
         .enter().append("rect")
         .attr("class","rect")
         .style("fill","blue")
+        .style("cursor","hand")
+        .on("mouseover", function(d) {
+            d3.select(this).style("fill","orange")
+        })
+        .on("mouseout", function(d) {
+            d3.select(this).style("fill","blue")
+        })
 
     this.draw_yAxis = this.svg.append("g")
         .attr("class", "y axis")
@@ -165,6 +172,28 @@ WinRateVis.prototype.updateVis = function(){
         that.displayTuples.push([that.displayHeights[ele],that.displayNames[ele]])
     }
 
+
+
+    this.displayTuples = that.displayTuples.sort(function(a,b) {
+        if (that.win_sort == "descending") {
+            that.sorting_function = d3.descending(a[0],b[0])
+        }
+        else if (that.win_sort == "ascending") {
+            that.sorting_function = d3.ascending(a[0],b[0])
+        }
+        else {
+            that.sorting_function = d3.ascending(a[1],b[1])
+        }
+        return that.sorting_function
+    })
+    //console.log(that.win_sort)
+    //console.log(that.displayTuples)
+
+    var xs = that.displayTuples.map(function(d) {return d[1]})
+
+    this.x_scale
+        .domain(xs)
+
     this.y_scale
         .domain([d3.max([0,that.y_min - .02]),that.y_max]);
 
@@ -191,6 +220,7 @@ WinRateVis.prototype.winSortChange= function (selected){
     this.win_sort = selected
     this.updateVis();
 }
+
 
 WinRateVis.prototype.brushChange= function (start, end){
     this.brushStart = start
