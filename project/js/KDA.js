@@ -6,6 +6,7 @@ KDAVis = function(_parentElement, _data, _metaData){
     this.kda_selection = "kills"
     this.brushStart = 0
     this.brushEnd = 0
+    
     this.kda_options = {"kills":0, "assists":1, "deaths":2}
 
 
@@ -90,6 +91,7 @@ KDAVis.prototype.initVis = function(){
     this.yAxis = d3.svg.axis()
         .scale(this.y_scale)
         .outerTickSize([1])
+        .tickFormat(function(d) {return (Math.round(d * 1000) / 10) + "%"})
         .orient("left");
 
     this.xAxis = d3.svg.axis()

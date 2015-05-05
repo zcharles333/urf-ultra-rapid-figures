@@ -33,6 +33,10 @@
                   stroke: #000;
                   shape-rendering: crispEdges;
                 }
+
+                [name=kda_pre] {
+                    display: none;
+                }
             </style>
             <!-- add own stylesheet-->
             <!--link rel="stylesheet" type="text/css" href="css/myStyle.css">-->
@@ -130,16 +134,19 @@
                     // var kda_area = new AreaVis(d3.select("kdaAreaVis"), allData)
                     var MyWinVis = new WinRateVis(d3.select("#winArea"), allData, metaData, MyEventHandler);
 
-                    // var kda_options = ['Kills', 'Deaths', 'Assists']
+                    var kda_options = ['Kills', 'Deaths', 'Assists']
+                    var form = d3.select("#KDAVis")
+                        .append("form")
+                            .attr("action","")
                     // for (var ele in kda_options) {
-                    //     d3.select("#KDAVis")
-                    //         .append("label")
-                    //         .text(kda_options[ele])
+                    //     form
                     //         .append("input")
-                    //           .attr("type","radio")
-                    //           .attr("name","kda")
-                    //           .attr("value",kda_options[ele].toLowerCase())
-                    //           .property("checked",ele==0)
+                    //             .attr("type","radio")
+                    //             .attr("name","kda")
+                    //             .attr("value",kda_options[ele].toLowerCase())
+                    //             .text(kda_options[ele])
+                    //             .property("checked",ele==0)
+                           
                     // }
                     
                     var MyKDAVis = new KDAVis(d3.select("#KDAVis"), allData, metaData);

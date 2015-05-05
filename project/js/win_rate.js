@@ -66,6 +66,7 @@ WinRateVis.prototype.initVis = function(){
     this.yAxis = d3.svg.axis()
         .scale(this.y_scale)
         .outerTickSize([0])
+        .tickFormat(function(d) {return (Math.round(d * 1000) / 10) + "%"})
         .orient("left");
 
     this.xAxis = d3.svg.axis()
