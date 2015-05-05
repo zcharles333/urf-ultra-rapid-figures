@@ -85,6 +85,10 @@ WinRateVis.prototype.initVis = function(){
         .on("mouseout", function(d) {
             d3.select(this).style("fill","blue")
         })
+	.on("click", function(d){
+	    console.log(d)
+	    
+	})
 
     this.draw_yAxis = this.svg.append("g")
         .attr("class", "y axis")

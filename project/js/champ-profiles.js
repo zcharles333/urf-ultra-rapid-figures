@@ -61,32 +61,30 @@ ProfileVis.prototype.updateVis = function(){
 	    placeholder["unique"]["items"] = duration_indices.map(function(d) {
 		return that.selected[i].unique.items[d]
 	    })
-	    placeholder["unique"]["summoner_spell"] = duration_indices.map(function(d){
+	    placeholder["unique"]["summoner_spells"] = duration_indices.map(function(d){
 		return that.selected[i].unique.summoner_spells[d]
 	    })
 	    placeholder["id"] = that.selected[i].id
 	    that.filtered_data.push(placeholder)
 	}
-	
-	
-	//for (var k in that.filtered_data) {
-	//    var totalItems = []
-	//    for (var j in that.filtered_data[k].items) {
-	//	
-	//	
-	//	totalItems = totalItems.concat(that.filtered_data[k].items[j])
-	//    }
-	//    that.filtered_data[i].totalItems = d3.entries(_.countBy(totalItems))
-	//    
-	//    that.filtered_data[i].totalItems.sort(function(a,b){return b.value - a.value})
-	//    that.filtered_data[i].topItems = that.filtered_data[i].totalItems.slice(0,6)
-	//}
-	
+
     }
     else {
 	that.filtered_data = that.selected
 	
     }
+    for (var i in that.filtered_data) {
+	var totalSpells = []
+	for (var j in that.filtered_data[i].unique.summoner_spells) {
+	    
+	    totalSpells = totalSpells.concat(that.filtered_data[i].unique.summoner_spells[j])
+	}
+	that.filtered_data[i].totalSpells = d3.entries(_.countBy(totalSpells))
+	
+	that.filtered_data[i].totalSpells.sort(function(a,b){return b.value - a.value})
+	that.filtered_data[i].topSpells = that.filtered_data[i].totalSpells.slice(0,2)
+    }
+    
     for (var i in that.filtered_data) {
 	var totalItems = []
 	for (var j in that.filtered_data[i].unique.items) {
@@ -160,14 +158,34 @@ ProfileVis.prototype.updateVis = function(){
 	    .attr("width", 50)
 	    .attr("height", 50)
 	    .attr("xlink:href", function(d){
-		console.log(d)
+		
 		if (d === undefined || d.topItems[x] === undefined) {
 		    return "img/item/" + 0 + ".png";
 		}
 		return "img/item/" + d.topItems[x].key + ".png"    
 	    })
 	
+    }
+    this.summonerTitle = this.profiles
+	.append("text")
+	.attr("x", function(d,i){return that.margin + ((that.profileWidth-40)/2)+ i * (that.profileWidth)})
+	.attr("y", "150")
+	.text("Common Summoner Spells")
+	.style("font-size", "10px")
 	
+    for (var x = 0; x < 2; x ++ ) {
+	this.profiles.append("image")
+	    .attr("x", function(d,i){return that.margin + 120+ i * (that.profileWidth) + x * 50})
+	    .attr("y", 160)
+	    .attr("width", 40)
+	    .attr("height", 40)
+	    .attr("xlink:href", function(d){
+	    
+		if (d === undefined || d.topSpells[x] === undefined) {
+		    return "img/item/" + 0 + ".png";
+		}
+		return "img/summoners/" + d.topSpells[x].key + ".png"
+	    })
     }
     
     that.profiles.exit().remove()
