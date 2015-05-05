@@ -353,7 +353,7 @@ ForceVis.prototype.updateVis = function(){
     
     //this.clips.remove()
     //this.images.remove()
-    console.log(that.testWinRateData)
+    //console.log(that.testWinRateData)
     //
     //this.clips = this.nodes.append("clipPath")
     //    .attr("id", "cut-off")

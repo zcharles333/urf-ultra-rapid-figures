@@ -23,7 +23,7 @@ KDAVis.prototype.initVis = function(){
     var that = this; // read about the this
 
     this.width = 650;
-    this.height = 500;
+    this.height = 300;
 
     //console.log(this.data)
     var kills = []
@@ -76,7 +76,7 @@ KDAVis.prototype.initVis = function(){
    
     //TODO: create axis and scales
     this.x_margin = 50
-    this.y_margin = 200
+    this.y_margin = 50
 
     this.x_scale = d3.scale.linear()
         .range([0+that.x_margin, that.width])
@@ -86,6 +86,29 @@ KDAVis.prototype.initVis = function(){
 
     this.g = this.svg.append("g")
     	.attr("transform", "translate(0,0)")
+
+    this.yAxis = d3.svg.axis()
+        .scale(this.y_scale)
+        .orient("left");
+
+    this.xAxis = d3.svg.axis()
+        .scale(this.x_scale)
+        .orient("bottom")
+
+    this.draw_xAxis = this.svg.append("g")
+        .attr("class","x axis")
+        .attr("transform", "translate(0," + (that.height - that.y_margin) +")")
+        .call(this.xAxis)
+
+    this.draw_xAxis
+        .selectAll(".tick").select("text")
+            .attr("transform", "rotate(-70) translate(-10,-10)")
+            .style("text-anchor","end")
+
+    this.draw_yAxis = this.svg.append("g")
+        .attr("class", "y axis")
+        .attr("transform", "translate(" + that.x_margin +",0)")
+        .call(this.yAxis)
 
     // filter, aggregate, modify data
     this.wrangleData(null);
@@ -150,6 +173,7 @@ KDAVis.prototype.updateVis = function(){
     }
     // console.log(keys)
     // console.log(that.tuple_arrays)
+    // console.log(count_dicts)
 
     this.x_scale
         .domain([that.x_min,that.x_max]);
@@ -179,6 +203,13 @@ KDAVis.prototype.updateVis = function(){
         .style("stroke", function(d,i){return color_scale(i);})
         .style("stroke-width", "1px")
         .style("fill", "none")
+
+    this.draw_xAxis
+        .call(that.xAxis)
+
+    this.draw_yAxis
+        .call(that.yAxis)
+
 
     // if (that.displayData.length) {
     //     var count_dicts = []
