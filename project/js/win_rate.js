@@ -6,6 +6,7 @@ WinRateVis = function(_parentElement, _data, _metaData, _eventHandler){
     this.metaData = _metaData;
     this.eventHandler = _eventHandler;
     this.win_sort = "descending"
+    this.selectedChamps = []
     this.brushStart = 0
     this.brushEnd = 0
     this.champNames = Object.keys(that.metaData.champions).map(function(key){
@@ -81,6 +82,15 @@ WinRateVis.prototype.initVis = function(){
         .style("fill","blue")
         .style("cursor","hand")
         .on("click", function(d) {
+            // var index = that.selectedChamps.indexOf(d[1])
+            // if (index >= 0){
+            //     that.selectedChamps.splice(index,1)
+            // }
+            // else {
+            //     that.selectedChamps.push(d[1])
+            // }
+            // that.clickChange()
+            console.log("hi")
             that.clickChange(d[1])
         })
         .on("mouseover", function(d) {
@@ -118,7 +128,7 @@ WinRateVis.prototype.initVis = function(){
 
         })
         .on("mouseout", function(d) {
-            d3.select(this).style("fill","blue")
+            d3.select(this).style("fill",function(d) {return that.color_bar(d)})
             that.tooltipGroup.style("display", "none")
         })
 
@@ -146,6 +156,29 @@ WinRateVis.prototype.initVis = function(){
     this.tooltipImage = this.tooltipGroup
         .append("image")
         .attr("class", "tooltipImage")
+
+    that.clickChange = function(name) {
+        // var ids = that.selectedChamps.map(function(d) {
+        //     return parseInt(that.metaData.champs_to_ids[d])
+        // })
+        // var selected = []
+        // for (ele in that.data) {
+        //     if (ids.indexOf(parseInt(that.data[ele].id)) >= 0) {
+        //         selected.push(that.data[ele])
+        //     }
+        // }
+        // console.log(selected)
+        // $(that.eventHandler).trigger("clickChange", [selected]);
+        var selected_id = parseInt(that.metaData.champs_to_ids[name])
+        var selected = new Object()
+        for (ele in that.data) {
+            if (selected_id == parseInt(that.data[ele].id)) {
+                selected = that.data[ele]
+            }
+        }
+        console.log(selected)
+        $(that.eventHandler).trigger("clickChange", selected);
+    }
 
     // this.draw_xAxis = this.svg.append("g")
     //     .attr("class","x axis")
@@ -221,7 +254,7 @@ WinRateVis.prototype.updateVis = function(){
     });
 
     this.y_min = d3.min(that.displayHeights)
-    this.y_max = d3.max(that.displayHeights) + 0.05
+    this.y_max = d3.max(that.displayHeights)
 
     var keys = Object.keys(that.displayDict)
     this.displayNames = keys.map(function(d) {return that.metaData.champions[d]})
@@ -262,9 +295,19 @@ WinRateVis.prototype.updateVis = function(){
     this.draw_yAxis
         .call(this.yAxis)
 
+    that.color_bar = function(d) {
+        if (that.selectedChamps.indexOf(d[1]) >= 0) {
+            return "red"
+        }
+        else {
+            return "blue"
+        }
+    }
+
     this.drawBars
         .data(that.displayTuples)
         .transition().duration(500)
+        .style("fill",function(d) {return that.color_bar(d)})
         .attr("x",function(d,i){return isNaN(that.x_scale(d[1])) ? 0: that.x_scale(d[1])})
         .attr("y",function(d){return isNaN(that.y_scale(d[0])) ? 0 : that.y_scale(d[0])}) //that.y_scale(d)})
         .attr("width", function(d){return isNaN(that.x_scale.rangeBand()) ? 0 : that.x_scale.rangeBand()})
@@ -273,8 +316,11 @@ WinRateVis.prototype.updateVis = function(){
 
 WinRateVis.prototype.onSelectionChange= function (selected){
 
-    // highlight some bars
-
+    var that = this
+    this.selectedChamps = selected.map(function(d) {
+        return that.metaData.champions[d.id]
+    })
+    console.log(this.selectedChamps)
     this.updateVis();
 }
 
