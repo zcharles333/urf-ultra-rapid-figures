@@ -3,13 +3,14 @@ ProfileVis = function(_parentElement, _data, _metaData){
     this.parentElement = _parentElement;
     this.data = _data;
     this.metaData = _metaData;
-    
+    that = this
     this.brushStart = 0
     this.brushEnd = 0
     this.width = 1440;
     this.height = 400;
     this.margin = 50;
     this.selected = []
+
     this.initVis();
 
 }

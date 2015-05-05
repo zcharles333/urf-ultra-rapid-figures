@@ -42,6 +42,16 @@ DurationVis.prototype.initVis = function(){
     this.formatMinutes = function(d) { 
         var minutes = Math.floor(d / 60),
             seconds = Math.floor(d - (minutes * 60));
+        var output = ''//seconds + 's';
+        if (minutes) {
+            output = minutes + 'm ' + output;
+        }
+        return output;
+    };
+
+    this.formatMinutesSeconds = function(d) { 
+        var minutes = Math.floor(d / 60),
+            seconds = Math.floor(d - (minutes * 60));
         var output = seconds + 's';
         if (minutes) {
             output = minutes + 'm ' + output;
@@ -102,7 +112,7 @@ DurationVis.prototype.initVis = function(){
         .text("Number of Games")
     function brushed() {
 
-        console.log(that.formatMinutes(that.brush.extent()[0]) + "->" + that.formatMinutes(that.brush.extent()[1]))
+        console.log(that.formatMinutesSeconds(that.brush.extent()[0]) + "->" + that.formatMinutesSeconds(that.brush.extent()[1]))
         $(that.eventHandler).trigger("brushed", that.brush.extent())
         
     }
