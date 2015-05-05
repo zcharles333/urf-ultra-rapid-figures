@@ -3,13 +3,14 @@ ProfileVis = function(_parentElement, _data, _metaData){
     this.parentElement = _parentElement;
     this.data = _data;
     this.metaData = _metaData;
-    
+    that = this
     this.brushStart = 0
     this.brushEnd = 0
     this.width = 1440;
     this.height = 400;
     this.margin = 50;
     this.selected = []
+
     this.initVis();
 
 }
@@ -171,6 +172,18 @@ ProfileVis.prototype.updateVis = function(){
 	//	return "Average CS: " + Math.round(d3.sum(d.creep_score)/d.creep_score.length)
 	//    }
 	    return "Average CS: " + Math.round(d3.sum(d.unique.creep_score)/d.unique.creep_score.length)
+	    
+	})
+
+	this.popularity = this.profiles
+	.append("text")
+	.attr("x", function(d,i){return that.margin + ((that.profileWidth-40)/2)+ i * (that.profileWidth)})
+	.attr("y", "100")
+	.text(function(d){
+	//    if (that.brushStart < that.brushEnd) {
+	//	return "Average CS: " + Math.round(d3.sum(d.creep_score)/d.creep_score.length)
+	//    }
+	    return "Popularity: " + (Math.round(d.popularity * 10000) / 100) + "%"
 	    
 	})
     
