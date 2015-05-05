@@ -29,7 +29,7 @@ WinRateVis.prototype.initVis = function(){
     var that = this; // read about the this
 
     this.width = 1440;
-    this.height = 300;
+    this.height = 200;
 
     // this.defaultDisplayDict = {}
     // for (ele in this.data) {
@@ -99,26 +99,26 @@ WinRateVis.prototype.initVis = function(){
             that.tooltipGroup.style("display", "initial")
             that.tooltip
                 .attr("x", d3.mouse(this)[0]- 50)
-                .attr("y", d3.mouse(this)[1]-150)
+                .attr("y", 0)
                 .attr("width", 100)
                 .attr("height", 100)
                 .style("fill", "lightgray")
 
             that.tooltipText
                 .attr("x", d3.mouse(this)[0])
-                .attr("y", d3.mouse(this)[1] - 130)
+                .attr("y", 20)
                 .text(d[1])
                 .style("text-anchor", "middle")
 
             that.tooltipText2
                 .attr("x", d3.mouse(this)[0])
-                .attr("y", d3.mouse(this)[1] - 115)
+                .attr("y", 35)
                 .text("Win Rate: " + (Math.round(d[0] * 10000) /100) + "%")
                 .style("text-anchor", "middle")
 
             that.tooltipImage
                 .attr("x", d3.mouse(this)[0] - 25)
-                .attr("y", d3.mouse(this)[1] - 110)
+                .attr("y", 40)
                 .attr("width",50)
                 .attr("height",50)
                 .attr("xlink:href", function(){
