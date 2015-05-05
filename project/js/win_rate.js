@@ -80,6 +80,9 @@ WinRateVis.prototype.initVis = function(){
         .attr("class","rect")
         .style("fill","blue")
         .style("cursor","hand")
+        .on("click", function(d) {
+            that.clickChange(d[1])
+        })
         .on("mouseover", function(d) {
             d3.select(this).style("fill","orange")
             //console.log(d)
