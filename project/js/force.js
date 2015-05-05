@@ -15,14 +15,14 @@ ForceVis = function(_parentElement, _data, _metaData, _eventHandler){
     this.metaData = _metaData
     this.data = _data;
     this.displayData = [];
-
+    console.log(this.metaData)
     this.brushStart = 0
     this.brushEnd = 0
     
     // TODO: define all constants here
     this.margin = 30
     this.height = 700
-    this.width = 800
+    this.width = 900
     this.clicked = []
     this.initVis();
 
@@ -51,11 +51,14 @@ ForceVis.prototype.initVis = function(){
     
     this.forcedata = {nodes:[], links: []}
     this.forcedata.nodes = that.data
-
+    console.log(that.forcedata.nodes)
+    //this.totalAppearances = d3.sum(that.forcedata.nodes, function(d){return d.appearances})
+    
     this.nodes = that.graph.selectAll(".node")
         .data(that.forcedata.nodes)
         .enter()
         .append("g").attr("class", function(d){return "node n" + d["id"]})
+        
     this.winRateData = new Object()
     var winRateList = []
     
@@ -71,53 +74,50 @@ ForceVis.prototype.initVis = function(){
         winRateList.push(winCount* 100/winLength)
     })
     this.defaultWinRateData = that.winRateData
+    this.defaultWinRateList = winRateList
     
-    var maxWin = d3.max(winRateList)
-    var minWin = d3.min(winRateList)
+    
+    
+    
+    var maxWin = d3.max(that.forcedata.nodes, function(d){return d.popularity})
+    var minWin = d3.min(that.forcedata.nodes, function(d){return d.popularity})
     
     
     this.radScale = d3.scale.pow()
-        .exponent(4)
+        .exponent(0.1)
         .domain([minWin, maxWin])
         .range([10,30])
     var opacityScale = d3.scale.pow()
-        .exponent(4)
+        .exponent(0.1)
         .domain([minWin, maxWin])
         .range([0.3,1])
-    
-    //this.nodes.append("circle")
-    //    .attr("r", function(d) {d.radius = radScale(winRateData[d.id]) ; return d.radius; })
-    
-    
     
     
     this.clips = this.nodes.append("clipPath")
         .attr("id", "cut-off")
         .append("circle")
         .attr("cx", function(d){
-    
-            return that.radScale(that.winRateData[d.id]) 
+            d.radius = that.radScale(d.popularity) 
+            return d.radius
         })
         .attr("cy", function(d,i){
-            return that.radScale(that.winRateData[d.id]) 
+            return d.radius
         })
         .attr("r", function(d,i){
-            d.radius = that.radScale(that.winRateData[d.id])
-            return that.radScale(that.winRateData[d.id])
+            
+            return d.radius
         })
     
-        //.style("stroke-width", "5px")
-        //.style("stroke", "black")
-    
+
     this.images = this.nodes.append("image")
         .attr("xlink:href", function(d){
             return "img/champions/" + d["id"] + "_Web_0.jpg"    
         })
         .attr("width", function(d,i){
-            return (that.radScale(that.winRateData[d.id]))  * 2
+            return (d.radius)  * 2
         })
         .attr("height", function(d,i){
-            return (that.radScale(that.winRateData[d.id]))*2
+            return (d.radius)*2
         })
         .attr("clip-path", "url(#cut-off)")
         .attr("class", "circ")
@@ -146,7 +146,7 @@ ForceVis.prototype.initVis = function(){
     
     this.nodes
         .style("opacity", function(d){
-            return opacityScale(that.winRateData[d.id])
+            return opacityScale(d.popularity)
         })
         .style("cursor", "hand")
         //.on("mouseover", function(d){
@@ -189,7 +189,7 @@ ForceVis.prototype.initVis = function(){
                 .attr("class", "selected")
                 .attr("x", 20)
                 .attr("y", function(d,i){return 30 * i + 60})
-                .text(function(d,i){return (i+1) + ". " + d.id})
+                .text(function(d,i){return (i+1) + ". " + that.metaData.champions[d.id]})
             
             
             
@@ -215,7 +215,7 @@ ForceVis.prototype.initVis = function(){
             that.nodes
                 .transition().duration(50)
                 .attr("transform", function(d,i) {
-                    d.x += -k
+                    d.x += -0.75 * k
                     //d.radius = that.radScale(that.testWinRateData[d.id])
                     //if (isNaN(d.radius)) {
                     //    d.radius = that.radScale.domain()[0]
@@ -327,41 +327,51 @@ ForceVis.prototype.brushChange= function (start, end){
 ForceVis.prototype.updateVis = function(){
     var that = this
 
-    this.winArrays = {}
-    if (that.brushStart < that.brushEnd) {
-
-        for (i in that.data) {
-            var duration_indices = []
-            for (ele in that.data[i].unique.duration) {
-                if (that.data[i].unique.duration[ele] >= that.brushStart && that.data[i].unique.duration[ele] <= that.brushEnd) {
-                    duration_indices.push(ele)
-                }
-            }
-            that.winArrays[that.data[i].id] = duration_indices.map(function(d) {
-                return that.data[i].unique.winner[d]
-            })
-        }
-        var keys = Object.keys(that.winArrays)
-        for (ele in keys) {
-            that.testWinRateData[keys[ele]] = _.countBy(that.winArrays[keys[ele]])["1"] / that.winArrays[keys[ele]].length
-        }
-    }
-    else {
-        this.testWinRateData = that.defaultWinRateData
-    }
-
-    
-    //this.clips.remove()
-    //this.images.remove()
-    console.log(that.testWinRateData)
+    //this.winArrays = {}
+    //var tempArray = []
+    //if (that.brushStart < that.brushEnd) {
     //
-    //this.clips = this.nodes.append("clipPath")
-    //    .attr("id", "cut-off")
-    //    .append("circle")
+    //    for (i in that.data) {
+    //        var duration_indices = []
+    //        for (ele in that.data[i].unique.duration) {
+    //            if (that.data[i].unique.duration[ele] >= that.brushStart && that.data[i].unique.duration[ele] <= that.brushEnd) {
+    //                duration_indices.push(ele)
+    //            }
+    //        }
+    //        that.winArrays[that.data[i].id] = duration_indices.map(function(d) {
+    //            return that.data[i].unique.winner[d]
+    //        })
+    //    }
+    //    var keys = Object.keys(that.winArrays)
+    //    for (ele in keys) {
+    //        var value = _.countBy(that.winArrays[keys[ele]])["1"] / that.winArrays[keys[ele]].length
+    //        tempArray.push(value)
+    //        that.testWinRateData[keys[ele]] = _.countBy(that.winArrays[keys[ele]])["1"] / that.winArrays[keys[ele]].length
+    //    }
+    //}
+    //else {
+    //    tempArray = that.defaultWinRateList
+    //    this.testWinRateData = that.defaultWinRateData
+    //}
+    //
+    //
+    ////this.clips.remove()
+    ////this.images.remove()
+    //console.log(that.testWinRateData)
+    //console.log(tempArray)
+    //var maxWin = d3.max(tempArray)
+    //var minWin = d3.min(tempArray)
+    //console.log(tempArray)
+    //
+    //this.radScale 
+    //    .domain([minWin, maxWin])
+    //
+    ////
+    //this.clips
     //    .attr("cx", function(d){
     //        d.radius = that.radScale(that.testWinRateData[d.id])
     //        if (isNaN(d.radius)) {
-    //            d.radius = that.radScale.domain()[0]
+    //            d.radius = 0
     //        }
     //        return d.radius
     //    })
@@ -376,10 +386,7 @@ ForceVis.prototype.updateVis = function(){
     //    //.style("stroke-width", "5px")
     //    //.style("stroke", "black")
     //
-    //this.images = this.nodes.append("image")
-    //    .attr("xlink:href", function(d){
-    //        return "img/champions/" + d["id"] + "_Web_0.jpg"    
-    //    })
+    //this.images 
     //    .attr("width", function(d,i){
     //        return d.radius  * 2
     //    })
@@ -387,10 +394,9 @@ ForceVis.prototype.updateVis = function(){
     //        return d.radius*2
     //    })
     //    .attr("clip-path", "url(#cut-off)")
-    //    .attr("class", "circ")
+    // 
     //
-
-    
+    //
     
     
 }

@@ -21,8 +21,10 @@
             <!-- add own vis classes-->
             <script src = "js/force.js"></script>
             <script src = "js/item_bar.js"></script>
+            <script src = "js/champ-profiles.js"></script>
             <script src = "js/KDA.js"></script>
             <script src = "js/game_duration.js"></script>
+            
         
             <!-- add own stylesheet-->
             <!--link rel="stylesheet" type="text/css" href="css/myStyle.css">-->
@@ -36,7 +38,7 @@
             <div id = "durationArea">
                 
             </div>
-            <div id = "barVis">
+            <div id = "profileVis">
                 
             </div>
             <div id = "KDAVis">
@@ -77,7 +79,7 @@
                     
                     var force = new ForceVis(d3.select("#force_filter"), allData, metaData, MyEventHandler);
                     //var duration_area = new DurationVis(d3.select("durationVis"), allData);
-                    var bar_items = new BarVis(d3.select("#barVis"), allData);
+                    var profiles = new ProfileVis(d3.select("#profileVis"), allData, metaData);
                     // var kda_area = new AreaVis(d3.select("kdaAreaVis"), allData)
                     var MyKDAVis = new KDAVis(d3.select("#KDAVis"), allData, metaData);
                     var game_vis = new DurationVis(d3.select("#durationArea"), allData, metaData, MyEventHandler);
@@ -90,11 +92,13 @@
                     
                     $(MyEventHandler).bind("selectionChanged", function(event, selected){
                         MyKDAVis.onSelectionChange(selected);
+                        profiles.onSelectionChange(selected);
                     });
 
                     $(MyEventHandler).bind("brushed", function(event, start, end){
                         MyKDAVis.brushChange(start,end);
                         force.brushChange(start,end);
+                        profiles.brushChange(start,end);
                     });
 
                     $(MyEventHandler).bind("kdaRadioChange", function(event, selected){
