@@ -21,8 +21,8 @@ ForceVis = function(_parentElement, _data, _metaData, _eventHandler){
     
     // TODO: define all constants here
     this.margin = 30
-    this.height = 700
-    this.width = 900
+    this.height = 500
+    this.width = 700
     this.clicked = []
     this.initVis();
 
@@ -95,7 +95,7 @@ ForceVis.prototype.initVis = function(){
     this.radScale = d3.scale.pow()
         .exponent(0.1)
         .domain([minWin, maxWin])
-        .range([10,30])
+        .range([5,20])
     var opacityScale = d3.scale.pow()
         .exponent(0.1)
         .domain([minWin, maxWin])
@@ -218,7 +218,7 @@ ForceVis.prototype.initVis = function(){
         }
         
         that.force
-            .charge(function(d, i) { return (that.clicked.indexOf(d) != -1) ? -3000/that.clicked.length : 0; })
+            .charge(function(d, i) { return (that.clicked.indexOf(d) != -1) ? -2000/that.clicked.length : 0; })
             .links(createLinks(that.clicked))
         
         that.force.start()
