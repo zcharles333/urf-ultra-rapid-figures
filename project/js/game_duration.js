@@ -38,10 +38,21 @@ DurationVis.prototype.initVis = function(){
             
     this.yScale = d3.scale.linear()
             .range([that.height,0])
+
+    this.formatMinutes = function(d) { 
+        var minutes = Math.floor(d / 60),
+            seconds = Math.floor(d - (minutes * 60));
+        var output = seconds + 's';
+        if (minutes) {
+            output = minutes + 'm ' + output;
+        }
+        return output;
+    };
     
     this.xAxis = d3.svg.axis()
         .scale(that.xScale)
         .outerTickSize([0])
+        .tickFormat(that.formatMinutes)
         .orient("bottom")
     
     this.yAxis = d3.svg.axis()
@@ -90,7 +101,8 @@ DurationVis.prototype.initVis = function(){
         .style("font-size", "20px")
         .text("Number of Games")
     function brushed() {
-        //console.log(that.brush.extent())
+
+        console.log(that.formatMinutes(that.brush.extent()[0]) + "->" + that.formatMinutes(that.brush.extent()[1]))
         $(that.eventHandler).trigger("brushed", that.brush.extent())
         
     }
@@ -155,7 +167,9 @@ DurationVis.prototype.updateVis = function(){
         .datum(that.niceDuration)
         .attr("d", that.area)
         
-    
+    this.xAxis
+        .tickValues(d3.range(0, x_max, 600));
+
     this.drawXAxis 
         .call(that.xAxis);
 
