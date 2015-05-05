@@ -80,7 +80,7 @@ WinRateVis.prototype.initVis = function(){
         .data(that.champNames)
         .enter().append("rect")
         .attr("class","rect")
-        .style("fill","blue")
+        .style("fill","lightcoral")
         .style("cursor","hand")
         .on("click", function(d) {
             // var index = that.selectedChamps.indexOf(d[1])
@@ -91,7 +91,7 @@ WinRateVis.prototype.initVis = function(){
             //     that.selectedChamps.push(d[1])
             // }
             // that.clickChange()
-            console.log("hi")
+
             that.clickChange(d[1])
         })
         .on("mouseover", function(d) {
@@ -144,7 +144,7 @@ WinRateVis.prototype.initVis = function(){
     this.tooltip = this.tooltipGroup
         .append("rect")
         .attr("class", "tooltips")
-        .style("fill", "red")
+        .style("fill", "lightgreen")
 
     this.tooltipText = this.tooltipGroup
         .append("text")
@@ -177,7 +177,7 @@ WinRateVis.prototype.initVis = function(){
                 selected = that.data[ele]
             }
         }
-        console.log(selected)
+
         $(that.eventHandler).trigger("clickChange", selected);
     }
 
@@ -298,10 +298,10 @@ WinRateVis.prototype.updateVis = function(){
 
     that.color_bar = function(d) {
         if (that.selectedChamps.indexOf(d[1]) >= 0) {
-            return "red"
+            return "lightgreen"
         }
         else {
-            return "blue"
+            return "lightcoral"
         }
     }
 
@@ -321,7 +321,7 @@ WinRateVis.prototype.onSelectionChange= function (selected){
     this.selectedChamps = selected.map(function(d) {
         return that.metaData.champions[d.id]
     })
-    console.log(this.selectedChamps)
+
     this.updateVis();
 }
 

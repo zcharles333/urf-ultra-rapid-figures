@@ -91,11 +91,16 @@ DurationVis.prototype.initVis = function(){
         .append("g")
         .attr("class", "y axis")
     
-    
+    this.title = this.graph.append("text")
+        .attr("x", 30)
+        .attr("y", "-3")
+        .attr("class", "title")
+        .style("font-size", "16px")
+        .text("Time Selected: ")
     
     this.brush = d3.svg.brush()
         .x(that.xScale)
-        .on("brush", brushed);
+        .on("brushend", brushed);
     
     this.brushSelector = this.graph
         .append("g")
@@ -106,14 +111,12 @@ DurationVis.prototype.initVis = function(){
         .style("background", "lightgray")
         .style("opacity", 0.5);
         
-    this.graph.append("text")
-        .attr("x", 30)
-        .attr("y", "-3")
-        .style("font-size", "20px")
-        .text("Number of Games")
+    
+        
     function brushed() {
 
-        console.log(that.formatMinutesSeconds(that.brush.extent()[0]) + "->" + that.formatMinutesSeconds(that.brush.extent()[1]))
+        d3.select(".title")
+            .text("Time Selected: " + that.formatMinutesSeconds(that.brush.extent()[0]) + "->" + that.formatMinutesSeconds(that.brush.extent()[1]))
         $(that.eventHandler).trigger("brushed", that.brush.extent())
         
     }

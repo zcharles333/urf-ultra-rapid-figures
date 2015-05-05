@@ -15,14 +15,14 @@ ForceVis = function(_parentElement, _data, _metaData, _eventHandler){
     this.metaData = _metaData
     this.data = _data;
     this.displayData = [];
-    console.log(this.metaData)
+
     this.brushStart = 0
     this.brushEnd = 0
     
     // TODO: define all constants here
     this.margin = 30
     this.height = 500
-    this.width = 700
+    this.width = 800
     this.clicked = []
     this.initVis();
 
@@ -51,6 +51,7 @@ ForceVis.prototype.initVis = function(){
         .attr("height", this.height + this.margin)
         .attr("fill", "white")
         .style("stroke", "black")
+        .style("stroke-width", "2px")
     
     this.svg.style()
         //.style("background", "lightgray")
@@ -60,7 +61,6 @@ ForceVis.prototype.initVis = function(){
     
     this.forcedata = {nodes:[], links: []}
     this.forcedata.nodes = that.data
-    console.log(that.forcedata.nodes)
     //this.totalAppearances = d3.sum(that.forcedata.nodes, function(d){return d.appearances})
     
     this.nodes = that.graph.selectAll(".node")
@@ -151,7 +151,8 @@ ForceVis.prototype.initVis = function(){
     //    .attr("fill", "red")
     //    .style("opacity", "0.5")
 
-
+    this.nodes.append("title")
+        .text(function(d){return that.metaData.champions[d.id]})
     
     this.nodes
         .style("opacity", function(d){
@@ -252,7 +253,6 @@ ForceVis.prototype.initVis = function(){
             while (++j < n) q.visit(collide(that.forcedata.nodes[j]));
             
             that.nodes
-                .transition().duration(50)
                 .attr("transform", function(d,i) {
                     d.x += -0.75 * k
                     //d.radius = that.radScale(that.testWinRateData[d.id])
@@ -450,7 +450,6 @@ ForceVis.prototype.onSelectionChange = function(data) {
 
 ForceVis.prototype.onClickChange = function(selected) {
     
-    console.log(selected)
     this.click_ele(selected)
     this.updateVis();
 }
