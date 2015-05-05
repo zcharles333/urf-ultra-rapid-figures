@@ -24,7 +24,8 @@
             <script src = "js/champ-profiles.js"></script>
             <script src = "js/KDA.js"></script>
             <script src = "js/game_duration.js"></script>
-            
+            <script src = "js/win_rate.js"></script>
+
         
             <!-- add own stylesheet-->
             <!--link rel="stylesheet" type="text/css" href="css/myStyle.css">-->
@@ -38,14 +39,21 @@
             <div id = "durationArea">
                 
             </div>
+
             <div id = "profileVis">
+            </div>
+            <!--<div id = "barVis">
+            
+            </div>-->
+            <div id = "winArea">
+
                 
             </div>
             <div id = "KDAVis">
                 <form action="">
-                <input type="radio" name="kda" value="kills" checked>Kills<br>
-                <input type="radio" name="kda" value="deaths">Deaths<br>
-                <input type="radio" name="kda" value="assists">Assists<br>
+                <input type="radio" name="kda" value="kills" checked>Kills
+                <input type="radio" name="kda" value="deaths">Deaths
+                <input type="radio" name="kda" value="assists">Assists
                 </form>
                 
             </div>
@@ -79,8 +87,24 @@
                     
                     var force = new ForceVis(d3.select("#force_filter"), allData, metaData, MyEventHandler);
                     //var duration_area = new DurationVis(d3.select("durationVis"), allData);
+
                     var profiles = new ProfileVis(d3.select("#profileVis"), allData, metaData);
+
                     // var kda_area = new AreaVis(d3.select("kdaAreaVis"), allData)
+                    var MyWinVis = new WinRateVis(d3.select("#winArea"), allData, metaData, MyEventHandler);
+
+                    // var kda_options = ['Kills', 'Deaths', 'Assists']
+                    // for (var ele in kda_options) {
+                    //     d3.select("#KDAVis")
+                    //         .append("label")
+                    //         .text(kda_options[ele])
+                    //         .append("input")
+                    //           .attr("type","radio")
+                    //           .attr("name","kda")
+                    //           .attr("value",kda_options[ele].toLowerCase())
+                    //           .property("checked",ele==0)
+                    // }
+                    
                     var MyKDAVis = new KDAVis(d3.select("#KDAVis"), allData, metaData);
                     var game_vis = new DurationVis(d3.select("#durationArea"), allData, metaData, MyEventHandler);
                     
@@ -98,7 +122,11 @@
                     $(MyEventHandler).bind("brushed", function(event, start, end){
                         MyKDAVis.brushChange(start,end);
                         force.brushChange(start,end);
+
                         profiles.brushChange(start,end);
+
+                        MyWinVis.brushChange(start,end);
+
                     });
 
                     $(MyEventHandler).bind("kdaRadioChange", function(event, selected){

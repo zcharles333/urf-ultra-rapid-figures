@@ -327,6 +327,7 @@ ForceVis.prototype.brushChange= function (start, end){
 ForceVis.prototype.updateVis = function(){
     var that = this
 
+
     //this.winArrays = {}
     //var tempArray = []
     //if (that.brushStart < that.brushEnd) {
@@ -365,6 +366,7 @@ ForceVis.prototype.updateVis = function(){
     //
     //this.radScale 
     //    .domain([minWin, maxWin])
+
     //
     ////
     //this.clips
