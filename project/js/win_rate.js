@@ -27,7 +27,7 @@ WinRateVis.prototype.initVis = function(){
 
     var that = this; // read about the this
 
-    this.width = 800;
+    this.width = 950;
     this.height = 300;
 
     // this.defaultDisplayDict = {}
@@ -53,7 +53,7 @@ WinRateVis.prototype.initVis = function(){
     this.y_margin = 50
 
     this.x_scale = d3.scale.ordinal()
-        .rangeRoundBands([0+that.x_margin, that.width], .1, 0)
+        .rangeRoundBands([0 + that.x_margin, that.width - that.x_margin], .1, 0)
         .domain(that.champNames)
 
     this.y_scale = d3.scale.linear()
@@ -64,6 +64,7 @@ WinRateVis.prototype.initVis = function(){
 
     this.yAxis = d3.svg.axis()
         .scale(this.y_scale)
+        .outerTickSize([0])
         .orient("left");
 
     this.xAxis = d3.svg.axis()
@@ -81,9 +82,41 @@ WinRateVis.prototype.initVis = function(){
         .style("cursor","hand")
         .on("mouseover", function(d) {
             d3.select(this).style("fill","orange")
+            //console.log(d)
+            that.tooltipGroup.style("display", "initial")
+            that.tooltip
+                .attr("x", d3.mouse(this)[0]- 50)
+                .attr("y", d3.mouse(this)[1]-150)
+                .attr("width", 100)
+                .attr("height", 100)
+                .style("fill", "lightgray")
+
+            that.tooltipText
+                .attr("x", d3.mouse(this)[0])
+                .attr("y", d3.mouse(this)[1] - 130)
+                .text(d[1])
+                .style("text-anchor", "middle")
+
+            that.tooltipText2
+                .attr("x", d3.mouse(this)[0])
+                .attr("y", d3.mouse(this)[1] - 115)
+                .text("Win Rate: " + (Math.round(d[0] * 10000) /100) + "%")
+                .style("text-anchor", "middle")
+
+            that.tooltipImage
+                .attr("x", d3.mouse(this)[0] - 25)
+                .attr("y", d3.mouse(this)[1] - 110)
+                .attr("width",50)
+                .attr("height",50)
+                .attr("xlink:href", function(){
+                    return "img/champions/" + that.metaData.champs_to_ids[d[1]] + "_Web_0.jpg"    
+                })
+
+
         })
         .on("mouseout", function(d) {
             d3.select(this).style("fill","blue")
+            that.tooltipGroup.style("display", "none")
         })
 	.on("click", function(d){
 	    console.log(d)
@@ -94,6 +127,25 @@ WinRateVis.prototype.initVis = function(){
         .attr("class", "y axis")
         .attr("transform", "translate(" + that.x_margin +",0)")
         .call(this.yAxis)
+
+    this.tooltipGroup = this.svg.append("g")
+
+    this.tooltip = this.tooltipGroup
+        .append("rect")
+        .attr("class", "tooltips")
+        .style("fill", "red")
+
+    this.tooltipText = this.tooltipGroup
+        .append("text")
+        .attr("class", "tooltiptext")
+
+    this.tooltipText2 = this.tooltipGroup
+        .append("text")
+        .style("font-size","10")
+        .attr("class", "tooltiptext2")
+    this.tooltipImage = this.tooltipGroup
+        .append("image")
+        .attr("class", "tooltipImage")
 
     // this.draw_xAxis = this.svg.append("g")
     //     .attr("class","x axis")
@@ -154,19 +206,22 @@ WinRateVis.prototype.updateVis = function(){
         // }
         for (ele in this.data) {
             this.displayDict[this.data[ele].id] = _.countBy(that.data[ele].unique.winner)['1'] / that.data[ele].unique.winner.length
+            //if (isNaN(this.displayDict[this.data[ele].id])) {this.displayDict[this.data[ele].id] = 0}
         }
     }
 
-    var values = Object.keys(that.displayDict).map(function(key){
-        return that.displayDict[key];
-    });
-    //console.log(values)
-    this.y_min = d3.min(values)
-    this.y_max = d3.max(values)
-
     this.displayHeights = Object.keys(that.displayDict).map(function(key){
-        return that.displayDict[key];
+        if (isNaN(that.displayDict[key])) {
+            return 0
+        }
+        else {
+            return that.displayDict[key]
+        }   
+        //return that.displayDict[key];
     });
+
+    this.y_min = d3.min(that.displayHeights)
+    this.y_max = d3.max(that.displayHeights)
 
     var keys = Object.keys(that.displayDict)
     this.displayNames = keys.map(function(d) {return that.metaData.champions[d]})
@@ -188,6 +243,9 @@ WinRateVis.prototype.updateVis = function(){
         else {
             that.sorting_function = d3.ascending(a[1],b[1])
         }
+        if (that.sorting_function == 0) {
+            that.sorting_function = d3.ascending(a[1],b[1])
+        }
         return that.sorting_function
     })
     //console.log(that.win_sort)
@@ -206,6 +264,7 @@ WinRateVis.prototype.updateVis = function(){
 
     this.drawBars
         .data(that.displayTuples)
+        .transition().duration(500)
         .attr("x",function(d,i){return isNaN(that.x_scale(d[1])) ? 0: that.x_scale(d[1])})
         .attr("y",function(d){return isNaN(that.y_scale(d[0])) ? 0 : that.y_scale(d[0])}) //that.y_scale(d)})
         .attr("width", function(d){return isNaN(that.x_scale.rangeBand()) ? 0 : that.x_scale.rangeBand()})

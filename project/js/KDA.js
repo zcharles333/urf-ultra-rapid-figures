@@ -89,10 +89,12 @@ KDAVis.prototype.initVis = function(){
 
     this.yAxis = d3.svg.axis()
         .scale(this.y_scale)
+        .outerTickSize([0])
         .orient("left");
 
     this.xAxis = d3.svg.axis()
         .scale(this.x_scale)
+        .outerTickSize([0])
         .orient("bottom")
 
     this.draw_xAxis = this.svg.append("g")
