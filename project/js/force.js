@@ -22,7 +22,7 @@ ForceVis = function(_parentElement, _data, _metaData, _eventHandler){
     // TODO: define all constants here
     this.margin = 30
     this.height = 500
-    this.width = 700
+    this.width = 800
     this.clicked = []
     this.initVis();
 
@@ -51,6 +51,7 @@ ForceVis.prototype.initVis = function(){
         .attr("height", this.height + this.margin)
         .attr("fill", "white")
         .style("stroke", "black")
+        .style("stroke-width", "2px")
     
     this.svg.style()
         //.style("background", "lightgray")
@@ -252,7 +253,6 @@ ForceVis.prototype.initVis = function(){
             while (++j < n) q.visit(collide(that.forcedata.nodes[j]));
             
             that.nodes
-                .transition().duration(50)
                 .attr("transform", function(d,i) {
                     d.x += -0.75 * k
                     //d.radius = that.radScale(that.testWinRateData[d.id])

@@ -73,6 +73,7 @@ ProfileVis.prototype.updateVis = function(){
 	that.filtered_data = that.selected
 	
     }
+    
     for (var i in that.filtered_data) {
 	var totalSpells = []
 	for (var j in that.filtered_data[i].unique.summoner_spells) {
@@ -81,8 +82,23 @@ ProfileVis.prototype.updateVis = function(){
 	}
 	that.filtered_data[i].totalSpells = d3.entries(_.countBy(totalSpells))
 	
-	that.filtered_data[i].totalSpells.sort(function(a,b){return b.value - a.value})
-	that.filtered_data[i].topSpells = that.filtered_data[i].totalSpells.slice(0,2)
+	
+	that.filtered_data[i].topSpells = []
+	for (var l = 0; l < 2; l ++) {
+	    var biggest = 0
+	    var index = 0
+	    for (var m = 0; m < that.filtered_data[i].totalSpells.length; m++) {
+		if (that.filtered_data[i].totalSpells[m].value > biggest) {
+		    biggest = that.filtered_data[i].totalSpells[m].value
+		    index = m
+		}
+	    }
+	    
+	    that.filtered_data[i].topSpells.push(that.filtered_data[i].totalSpells[index])
+	    that.filtered_data[i].totalSpells.splice(index,1)
+	    
+	}
+	
     }
     
     for (var i in that.filtered_data) {
@@ -94,8 +110,22 @@ ProfileVis.prototype.updateVis = function(){
 	}
 	that.filtered_data[i].totalItems = d3.entries(_.countBy(totalItems))
 	
-	that.filtered_data[i].totalItems.sort(function(a,b){return b.value - a.value})
-	that.filtered_data[i].topItems = that.filtered_data[i].totalItems.slice(0,6)
+	
+	
+	that.filtered_data[i].topItems = []
+	for (var l = 0; l < 6; l ++) {
+	    var biggest = 0
+	    var index = 0
+	    for (var m = 0; m < that.filtered_data[i].totalItems.length; m++) {
+		if (that.filtered_data[i].totalItems[m].value > biggest) {
+		    biggest = that.filtered_data[i].totalItems[m].value
+		    index = m
+		}
+	    }
+	    that.filtered_data[i].topItems.push(that.filtered_data[i].totalItems[index])
+	    that.filtered_data[i].totalItems.splice(index, 1)
+	    
+	}
     }
     this.profiles = this.graph.selectAll(".profiles")
 	.data(that.filtered_data)
@@ -180,7 +210,7 @@ ProfileVis.prototype.updateVis = function(){
 	    .attr("width", 40)
 	    .attr("height", 40)
 	    .attr("xlink:href", function(d){
-	    
+
 		if (d === undefined || d.topSpells[x] === undefined) {
 		    return "img/item/" + 0 + ".png";
 		}
@@ -196,6 +226,7 @@ ProfileVis.prototype.updateVis = function(){
 
 ProfileVis.prototype.onSelectionChange= function (selected){
     this.selected = selected
+    console.log("reached")
     this.updateVis();
 }
 
