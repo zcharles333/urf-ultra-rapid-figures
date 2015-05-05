@@ -48,20 +48,20 @@ ProfileVis.prototype.updateVis = function(){
     if (that.brushStart < that.brushEnd) {
 	this.filtered_data = []
 	for (var i in that.selected) {
-	    placeholder = {}
+	    placeholder = {unique:{}}
 	    var duration_indices = []
 	    for (var ele in that.selected[i].unique.duration) {
 		if (that.selected[i].unique.duration[ele] >= that.brushStart && that.selected[i].unique.duration[ele] <= that.brushEnd) {
 		    duration_indices.push(ele)
 		}
 	    }
-	    placeholder["creep_score"] = duration_indices.map(function(d) {
+	    placeholder["unique"]["creep_score"] = duration_indices.map(function(d) {
 		return that.selected[i].unique.creep_score[d]
 	    })
-	    placeholder["items"] = duration_indices.map(function(d) {
+	    placeholder["unique"]["items"] = duration_indices.map(function(d) {
 		return that.selected[i].unique.items[d]
 	    })
-	    placeholder["summoner_spell"] = duration_indices.map(function(d){
+	    placeholder["unique"]["summoner_spell"] = duration_indices.map(function(d){
 		return that.selected[i].unique.summoner_spells[d]
 	    })
 	    placeholder["id"] = that.selected[i].id
@@ -69,36 +69,36 @@ ProfileVis.prototype.updateVis = function(){
 	}
 	
 	
-	for (var k in that.filtered_data) {
-	    var totalItems = []
-	    for (var j in that.filtered_data[k].items) {
-		
-		var uniqueArray = that.filtered_data[k].items[j].filter(function(elem, pos) {
-		    return that.filtered_data[k].items[j].indexOf(elem) == pos
-			&& that.trinketArray.indexOf(elem) == -1 ;
-		}); 
-		totalItems = totalItems.concat(uniqueArray)
-	    }
-	    that.filtered_data[k].totalItems = _.countBy(totalItems)
-	}
+	//for (var k in that.filtered_data) {
+	//    var totalItems = []
+	//    for (var j in that.filtered_data[k].items) {
+	//	
+	//	
+	//	totalItems = totalItems.concat(that.filtered_data[k].items[j])
+	//    }
+	//    that.filtered_data[i].totalItems = d3.entries(_.countBy(totalItems))
+	//    
+	//    that.filtered_data[i].totalItems.sort(function(a,b){return b.value - a.value})
+	//    that.filtered_data[i].topItems = that.filtered_data[i].totalItems.slice(0,6)
+	//}
 	
     }
     else {
 	that.filtered_data = that.selected
-	for (var i in that.filtered_data) {
-	    var totalItems = []
-	    for (var j in that.filtered_data[i].unique.items) {
-		
-		var uniqueArray = that.filtered_data[i].unique.items[j].filter(function(elem, pos) {
-		    return that.filtered_data[i].unique.items[j].indexOf(elem) == pos
-			&& that.trinketArray.indexOf(elem) == -1 ;
-		}); 
-		totalItems = totalItems.concat(uniqueArray)
-	    }
-	    that.filtered_data[i].totalItems = _.countBy(totalItems)
-	}
+	
     }
-    
+    for (var i in that.filtered_data) {
+	var totalItems = []
+	for (var j in that.filtered_data[i].unique.items) {
+	    
+	    
+	    totalItems = totalItems.concat(that.filtered_data[i].unique.items[j])
+	}
+	that.filtered_data[i].totalItems = d3.entries(_.countBy(totalItems))
+	
+	that.filtered_data[i].totalItems.sort(function(a,b){return b.value - a.value})
+	that.filtered_data[i].topItems = that.filtered_data[i].totalItems.slice(0,6)
+    }
     this.profiles = this.graph.selectAll(".profiles")
 	.data(that.filtered_data)
     
@@ -139,22 +139,37 @@ ProfileVis.prototype.updateVis = function(){
 	.attr("x", function(d,i){return that.margin + ((that.profileWidth-40)/2)+ i * (that.profileWidth)})
 	.attr("y", "120")
 	.text(function(d){
-	    if (that.brushStart < that.brushEnd) {
-		return "Average CS: " + Math.round(d3.sum(d.creep_score)/d.creep_score.length)
-	    }
+	//    if (that.brushStart < that.brushEnd) {
+	//	return "Average CS: " + Math.round(d3.sum(d.creep_score)/d.creep_score.length)
+	//    }
 	    return "Average CS: " + Math.round(d3.sum(d.unique.creep_score)/d.unique.creep_score.length)
 	    
 	})
     
     this.itemTitle = this.profiles
 	.append("text")
-	.attr("x", function(d,i){return ((that.profileWidth)/2)+ i * (that.profileWidth)})
-	.attr("y", (that.profileHeight/2) + 80)
+	.attr("x", function(d,i){return 10 + ((that.profileWidth)/2)+ i * (that.profileWidth)})
+	.attr("y", (that.profileHeight/2) + 70)
 	.text("Top 6 Items")
 	
+
+    for (var x = 0; x < 6; x ++) {
+	this.profiles.append("image")
+	    .attr("x", function(d,i){return that.margin + 50+ i * (that.profileWidth) + (x%3) * 60})
+	    .attr("y", function(d){return Math.floor(x/3) * 60 + that.profileHeight/2 + 75})
+	    .attr("width", 50)
+	    .attr("height", 50)
+	    .attr("xlink:href", function(d){
+		console.log(d)
+		if (d === undefined || d.topItems[x] === undefined) {
+		    return "img/item/" + 0 + ".png";
+		}
+		return "img/item/" + d.topItems[x].key + ".png"    
+	    })
+	
+	
+    }
     
-    
-    console.log(that.filtered_data)
     that.profiles.exit().remove()
     
 
