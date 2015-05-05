@@ -27,7 +27,7 @@ WinRateVis.prototype.initVis = function(){
 
     var that = this; // read about the this
 
-    this.width = 950;
+    this.width = 1440;
     this.height = 300;
 
     // this.defaultDisplayDict = {}

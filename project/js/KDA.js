@@ -22,7 +22,7 @@ KDAVis.prototype.initVis = function(){
 
     var that = this; // read about the this
 
-    this.width = 650;
+    this.width = 400;
     this.height = 300;
 
     //console.log(this.data)
@@ -112,6 +112,8 @@ KDAVis.prototype.initVis = function(){
         .attr("transform", "translate(" + that.x_margin +",0)")
         .call(this.yAxis)
 
+    
+	
     // filter, aggregate, modify data
     this.wrangleData(null);
 
@@ -201,6 +203,7 @@ KDAVis.prototype.updateVis = function(){
 
     this.kda.append("path")
         .attr("class","line")
+	.transition().duration(100)
         .attr("d",function(d) {return that.lines(d)})
         .style("stroke", function(d,i){return color_scale(i);})
         .style("stroke-width", "1px")

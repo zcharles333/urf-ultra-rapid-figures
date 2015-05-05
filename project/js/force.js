@@ -44,6 +44,15 @@ ForceVis.prototype.initVis = function(){
         .append("svg")
         .attr("width", this.width + this.margin)
         .attr("height", this.height + this.margin)
+    
+    this.svg
+        .append("rect")
+        .attr("width", this.width + this.margin)
+        .attr("height", this.height + this.margin)
+        .attr("fill", "white")
+        .style("stroke", "black")
+    
+    this.svg.style()
         //.style("background", "lightgray")
         
     this.graph = this.svg.append("g")
@@ -236,7 +245,7 @@ ForceVis.prototype.initVis = function(){
     
     
     this.displayer = that.graph.append("g")
-        .attr("transform", "translate(" + (that.width - 175) + "," + (that.height - 200) + ")")
+        .attr("transform", "translate(" + (that.width - 180) + "," + (that.height - 200) + ")")
               
     this.displayer.append("rect")
         .attr("x", 0)

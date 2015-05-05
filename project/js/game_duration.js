@@ -11,8 +11,8 @@ DurationVis = function(_parentElement, _data, _metaData, _eventHandler){
 
     this.margin = 70
     
-    this.height = 100
-    this.width = 800
+    this.height = 200
+    this.width = 450
 
 
     this.initVis();

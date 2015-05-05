@@ -26,39 +26,69 @@
             <script src = "js/game_duration.js"></script>
             <script src = "js/win_rate.js"></script>
 
-        
+            <style>
+                body{padding-left:20px;}
+            </style>
             <!-- add own stylesheet-->
             <!--link rel="stylesheet" type="text/css" href="css/myStyle.css">-->
         
         </head>
         
         <body>
-            <div id = "force_filter">
+            <div class="row">
+                
+                
                 
             </div>
-            <div id = "durationArea">
-                
+            <div class = "row">
+                <div class="col-md-8" id="force_filter">
+                </div>
+                <div class = "col-md-4">
+                    <div class = "row">
+                        <div id = "Intro"> Stuff stuff more stuff blah blah blah</div>
+                    </div>
+                    <div class = "row">
+                        <div id="durationArea"></div>
+                    </div>
+                    <div class = "row">
+                        <div id = "KDAVis">
+                            <form action="">
+                            <input type="radio" name="kda" value="kills" checked>Kills
+                            <input type="radio" name="kda" value="deaths">Deaths
+                            <input type="radio" name="kda" value="assists">Assists
+                            </form>
+                        </div>
+                    </div>
             </div>
-
-            <div id = "profileVis">
-            </div>
-            <!--<div id = "barVis">
-            
-            </div>-->
-            <div id = "winArea">
+            <div class = "row">
+                <div class = "col-md-12" id = "winArea">
                 <form action="">
                 <input type="radio" name="win" value="descending" checked>Descending
                 <input type="radio" name="win" value="ascending">Ascending
                 <input type="radio" name="win" value="alphabetical">Alphabetical
                 </form>
+                </div>
             </div>
-            <div id = "KDAVis">
-                <form action="">
-                <input type="radio" name="kda" value="kills" checked>Kills
-                <input type="radio" name="kda" value="deaths">Deaths
-                <input type="radio" name="kda" value="assists">Assists
-                </form>
+            <div class = "row">
+                <div class = "col-md-12" id = "profileVis"></div>
             </div>
+            <!--<div id = "force_filter">-->
+            <!--    -->
+            <!--</div>-->
+            <!--<div id = "durationArea">-->
+            <!--    -->
+            <!--</div>-->
+
+            
+            
+            
+            <!--<div id = "KDAVis">-->
+            <!--    <form action="">-->
+            <!--    <input type="radio" name="kda" value="kills" checked>Kills-->
+            <!--    <input type="radio" name="kda" value="deaths">Deaths-->
+            <!--    <input type="radio" name="kda" value="assists">Assists-->
+            <!--    </form>-->
+            <!--</div>-->
             
         </body>
         
