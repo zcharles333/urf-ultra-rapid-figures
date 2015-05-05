@@ -61,12 +61,13 @@ DurationVis.prototype.initVis = function(){
     
     this.xAxis = d3.svg.axis()
         .scale(that.xScale)
-        .outerTickSize([0])
+        .outerTickSize([1])
         .tickFormat(that.formatMinutes)
         .orient("bottom")
     
     this.yAxis = d3.svg.axis()
         .scale(that.yScale)
+        .outerTickSize([1])
         .orient("left")
         
     this.area = d3.svg.area()
@@ -178,7 +179,7 @@ DurationVis.prototype.updateVis = function(){
         .attr("d", that.area)
         
     this.xAxis
-        .tickValues(d3.range(0, x_max, 600));
+        .tickValues(d3.range(600, x_max, 600));
 
     this.drawXAxis 
         .call(that.xAxis);
@@ -186,8 +187,8 @@ DurationVis.prototype.updateVis = function(){
     this.drawYAxis
         .call(that.yAxis)
     
-    d3.select(".y.axis").select("path").style("display", "none")
-    d3.select(".y.axis").select(".tick").style("display", "none")
+    //d3.select(".y.axis").select("path").style("display", "none")
+    //d3.select(".y.axis").select(".tick").style("display", "none")
 }
 
 DurationVis.prototype.onSelectionChange= function (selectionStart, selectionEnd){
