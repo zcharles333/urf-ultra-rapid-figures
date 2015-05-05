@@ -105,8 +105,6 @@ ProfileVis.prototype.updateVis = function(){
     for (var i in that.filtered_data) {
 	var totalItems = []
 	for (var j in that.filtered_data[i].unique.items) {
-	    
-	    
 	    totalItems = totalItems.concat(that.filtered_data[i].unique.items[j])
 	}
 	that.filtered_data[i].totalItems = d3.entries(_.countBy(totalItems))
@@ -128,6 +126,7 @@ ProfileVis.prototype.updateVis = function(){
 	    
 	}
     }
+    
     this.profiles = this.graph.selectAll(".profiles")
 	.data(that.filtered_data)
     
@@ -239,7 +238,6 @@ ProfileVis.prototype.updateVis = function(){
 
 ProfileVis.prototype.onSelectionChange= function (selected){
     this.selected = selected
-    console.log("reached")
     this.updateVis();
 }
 
