@@ -163,39 +163,69 @@ ForceVis.prototype.initVis = function(){
         //    
         //})
         .on("click", function(d){
-            var index = that.clicked.indexOf(d)
-            if (index != -1) {
-                that.clicked.splice(index,1)
-            }
-            else {
-                that.clicked.push(d)
-            }
+            // var index = that.clicked.indexOf(d)
+            // if (index != -1) {
+            //     that.clicked.splice(index,1)
+            // }
+            // else {
+            //     that.clicked.push(d)
+            // }
             
-            if (that.clicked.length > 5) {
-                that.clicked.splice(0,1)
-            }
+            // if (that.clicked.length > 5) {
+            //     that.clicked.splice(0,1)
+            // }
             
-            that.force
-                .charge(function(d, i) { return (that.clicked.indexOf(d) != -1) ? -3000/that.clicked.length : 0; })
-                .links(createLinks(that.clicked))
+            // that.force
+            //     .charge(function(d, i) { return (that.clicked.indexOf(d) != -1) ? -3000/that.clicked.length : 0; })
+            //     .links(createLinks(that.clicked))
             
-            that.force.start()
+            // that.force.start()
             
-            that.selectedChamps.remove()
+            // that.selectedChamps.remove()
             
-            that.selectedChamps = that.displayer.selectAll(".selected")
-                .data(that.clicked)
-                .enter().append("text")
-                .attr("class", "selected")
-                .attr("x", 20)
-                .attr("y", function(d,i){return 30 * i + 60})
-                .text(function(d,i){return (i+1) + ". " + that.metaData.champions[d.id]})
+            // that.selectedChamps = that.displayer.selectAll(".selected")
+            //     .data(that.clicked)
+            //     .enter().append("text")
+            //     .attr("class", "selected")
+            //     .attr("x", 20)
+            //     .attr("y", function(d,i){return 30 * i + 60})
+            //     .text(function(d,i){return (i+1) + ". " + that.metaData.champions[d.id]})
             
-            
-            
-
-            selectedChampsChange()
+            // selectedChampsChange()
+            that.click_ele(d)
         })
+
+    this.click_ele = function(d) {
+        var index = that.clicked.indexOf(d)
+        if (index != -1) {
+            that.clicked.splice(index,1)
+        }
+        else {
+            that.clicked.push(d)
+        }
+        
+        if (that.clicked.length > 5) {
+            that.clicked.splice(0,1)
+        }
+        
+        that.force
+            .charge(function(d, i) { return (that.clicked.indexOf(d) != -1) ? -3000/that.clicked.length : 0; })
+            .links(createLinks(that.clicked))
+        
+        that.force.start()
+        
+        that.selectedChamps.remove()
+        
+        that.selectedChamps = that.displayer.selectAll(".selected")
+            .data(that.clicked)
+            .enter().append("text")
+            .attr("class", "selected")
+            .attr("x", 20)
+            .attr("y", function(d,i){return 30 * i + 60})
+            .text(function(d,i){return (i+1) + ". " + that.metaData.champions[d.id]})
+
+        selectedChampsChange()
+    }
         
     this.force = d3.layout.force()
         .size([that.width, that.height])
@@ -406,6 +436,13 @@ ForceVis.prototype.onSelectionChange = function(data) {
     
     this.brushStart = data[0]
     this.brushEnd = data[1]
+    this.updateVis();
+}
+
+ForceVis.prototype.onClickChange = function(selected) {
+    
+    console.log(selected)
+    this.click_ele(selected)
     this.updateVis();
 }
 
