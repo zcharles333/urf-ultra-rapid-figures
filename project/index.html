@@ -148,7 +148,15 @@
                     
                     $(MyEventHandler).bind("selectionChanged", function(event, selected){
                         MyKDAVis.onSelectionChange(selected);
+                        MyWinVis.onSelectionChange(selected);
                         profiles.onSelectionChange(selected);
+                    });
+
+                    $(MyEventHandler).bind("clickChange", function(event, selected){
+                        // MyKDAVis.onSelectionChange(selected);
+                        // MyWinVis.onSelectionChange(selected);
+                        // profiles.onSelectionChange(selected);
+                        force.onClickChange(selected);
                     });
 
                     $(MyEventHandler).bind("brushed", function(event, start, end){
