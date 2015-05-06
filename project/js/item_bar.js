@@ -13,9 +13,6 @@ BarVis = function(_parentElement, _data){
     this.parentElement = _parentElement;
     this.data = _data;
     this.displayData = [];
-
-    
-    // TODO: define all constants here
     this.margin = 30
     this.height = 70
     this.width = 600
@@ -30,11 +27,7 @@ BarVis = function(_parentElement, _data){
  */
 BarVis.prototype.initVis = function(){
 
-    var that = this; // read about the this
-
-
-    //TODO: construct or select SVG
-    //TODO: create axis and scales
+    var that = this;
 
     this.svg = this.parentElement
         .append("svg")

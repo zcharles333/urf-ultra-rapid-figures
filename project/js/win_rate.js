@@ -12,12 +12,6 @@ WinRateVis = function(_parentElement, _data, _metaData, _eventHandler){
     this.champNames = Object.keys(that.metaData.champions).map(function(key){
         return that.metaData.champions[key];
     });
-    //this.kda_options = {"kills":0, "assists":1, "deaths":2}
-
-
-
-
-    // TODO: define all constants here
 
 
     this.initVis();
@@ -26,40 +20,16 @@ WinRateVis = function(_parentElement, _data, _metaData, _eventHandler){
 
 WinRateVis.prototype.initVis = function(){
 
-    var that = this; // read about the this
+    var that = this;
 
     this.width = 1440;
     this.height = 300;
-
-    // this.defaultDisplayDict = {}
-    // for (ele in this.data) {
-    //     this.defaultdisplayDict[this.data[ele].id] = 
-    // }
-
-    // this.winData = {}
-    // for (ele in this.data) {
-    //     this.winData[this.data[ele].id] = _.countBy(that.data[ele].unique.winner)['1'] / that.data[ele].unique.winner.length
-    // }
-    //console.log(that.winData)
-
-    //TODO: construct or select SVG
-    //this.svg = this.parentElement.select("svg");
     this.svg = this.parentElement.append("svg")
         .attr("width",this.width)
         .attr("height",this.height)
 	.append("g")
 	.attr("transform", "translate(30,0)")
-        //.style("background-color", "lightcoral")
-    
-//    this.svg.append("rect")
-//	.attr("width", this.width)
-//	.attr("height", this.height)
-//	.attr("fill", "white")
-//    
-//	.style("stroke", "black")
-//	.style("stroke-width", "2px")
-    
-    //TODO: create axis and scales
+
     this.x_margin = 50
     this.y_margin = 50
 
@@ -69,7 +39,6 @@ WinRateVis.prototype.initVis = function(){
 
     this.y_scale = d3.scale.linear()
         .range([that.height-that.y_margin,100]);
-    //console.log(this.y_scale.range())
     this.g = this.svg.append("g")
     	.attr("transform", "translate(0,0)")
 
@@ -93,20 +62,11 @@ WinRateVis.prototype.initVis = function(){
         .style("fill","lightcoral")
         .style("cursor","hand")
         .on("click", function(d) {
-            // var index = that.selectedChamps.indexOf(d[1])
-            // if (index >= 0){
-            //     that.selectedChamps.splice(index,1)
-            // }
-            // else {
-            //     that.selectedChamps.push(d[1])
-            // }
-            // that.clickChange()
 
             that.clickChange(d[1])
         })
         .on("mouseover", function(d) {
             d3.select(this).style("fill","red")
-            //console.log(d)
             that.tooltipGroup.style("display", "initial")
             that.tooltip
                 .attr("x", d3.mouse(this)[0]- 50)
@@ -184,17 +144,6 @@ WinRateVis.prototype.initVis = function(){
         .attr("class", "tooltipImage")
 
     that.clickChange = function(name) {
-        // var ids = that.selectedChamps.map(function(d) {
-        //     return parseInt(that.metaData.champs_to_ids[d])
-        // })
-        // var selected = []
-        // for (ele in that.data) {
-        //     if (ids.indexOf(parseInt(that.data[ele].id)) >= 0) {
-        //         selected.push(that.data[ele])
-        //     }
-        // }
-        // console.log(selected)
-        // $(that.eventHandler).trigger("clickChange", [selected]);
         var selected_id = parseInt(that.metaData.champs_to_ids[name])
         var selected = new Object()
         for (ele in that.data) {
@@ -206,16 +155,6 @@ WinRateVis.prototype.initVis = function(){
         $(that.eventHandler).trigger("clickChange", selected);
     }
 
-    // this.draw_xAxis
-    //     .selectAll(".tick").select("text")
-    //         .attr("transform", "rotate(-70) translate(-10,-10)")
-    //         .style("text-anchor","end")
-
-    // this.draw_yAxis = this.svg.append("g")
-    //     .attr("class", "y axis")
-    //     .attr("transform", "translate(" + that.x_margin +",0)")
-    //     .call(this.yAxis)
-
     // filter, aggregate, modify data
     this.wrangleData(null);
 
@@ -225,14 +164,9 @@ WinRateVis.prototype.initVis = function(){
 
 WinRateVis.prototype.updateVis = function(){
     var that = this
-
-    // this.x_min = 0
-    // this.x_max = 0
     this.y_min = 0
     this.y_max = 0
     this.displayDict = {}
-    //this.brushStart = 600
-    //this.brushEnd = 1900
 
     this.winArrays = {}
     if (that.brushEnd > that.brushStart) {
@@ -255,12 +189,9 @@ WinRateVis.prototype.updateVis = function(){
 
     }
     else {
-        // for (ele in that.data) {
-        //     arrayDict[that.data[ele].id] = that.data[ele].unique.winner
-        // }
+
         for (ele in this.data) {
             this.displayDict[this.data[ele].id] = _.countBy(that.data[ele].unique.winner)['1'] / that.data[ele].unique.winner.length
-            //if (isNaN(this.displayDict[this.data[ele].id])) {this.displayDict[this.data[ele].id] = 0}
         }
     }
 
@@ -271,7 +202,6 @@ WinRateVis.prototype.updateVis = function(){
         else {
             return that.displayDict[key]
         }   
-        //return that.displayDict[key];
     });
 
     this.y_min = d3.min(that.displayHeights)
@@ -302,8 +232,6 @@ WinRateVis.prototype.updateVis = function(){
         }
         return that.sorting_function
     })
-    //console.log(that.win_sort)
-    //console.log(that.displayTuples)
 
     var xs = that.displayTuples.map(function(d) {return d[1]})
 
@@ -359,38 +287,6 @@ WinRateVis.prototype.brushChange= function (start, end){
 }
 
 WinRateVis.prototype.wrangleData= function(_filterFunction){
-    // displayData should hold the data which is visualized
-    //this.displayData = this.filterAndAggregate(_filterFunction);
+
 }
 
-// KDAVis.prototype.filterAndAggregate = function(_filter){
-
-
-//     // Set filter to a function that accepts all items
-//     // ONLY if the parameter _filter is NOT null use this parameter
-//     var filter = function(){return true;}
-//     if (_filter != null){
-//         filter = _filter;
-//     }
-//     //Dear JS hipster, a more hip variant of this construct would be:
-//     // var filter = _filter || function(){return true;}
-
-//     var that = this;
-
-//     // create an array of values for age 0-100
-//     var res = d3.range(16).map(function () {
-//         return 0;
-//     });
-
-//     // implement the function that filters the data and sums the values
-//     var in_range = this.data.filter(filter)
-//     for (i=0; i<in_range.length; i++)
-//     {
-//         for(j=0; j<res.length; j++)
-//         {
-//             res[j] += in_range[i].prios[j]
-//         }
-//     }
-//     return res;
-
-// }
