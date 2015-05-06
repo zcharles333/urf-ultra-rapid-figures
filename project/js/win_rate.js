@@ -139,6 +139,11 @@ WinRateVis.prototype.initVis = function(){
         .attr("transform", "translate(" + that.x_margin +",0)")
         .call(this.yAxis)
 
+    // this.draw_xAxis = this.svg.append("g")
+    //     .attr("class","x axis")
+    //     .attr("transform", "translate(0," + (that.height - that.y_margin) +")")
+    //     .call(this.xAxis)
+
     this.tooltipGroup = this.svg.append("g")
 
     this.tooltip = this.tooltipGroup
@@ -180,11 +185,6 @@ WinRateVis.prototype.initVis = function(){
 
         $(that.eventHandler).trigger("clickChange", selected);
     }
-
-    // this.draw_xAxis = this.svg.append("g")
-    //     .attr("class","x axis")
-    //     .attr("transform", "translate(0," + (that.height - that.y_margin) +")")
-    //     .call(this.xAxis)
 
     // this.draw_xAxis
     //     .selectAll(".tick").select("text")
