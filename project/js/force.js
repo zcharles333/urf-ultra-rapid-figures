@@ -21,7 +21,7 @@ ForceVis = function(_parentElement, _data, _metaData, _eventHandler){
     
     // TODO: define all constants here
     this.margin = 30
-    this.height = 500
+    this.height = 600
     this.width = 800
     this.clicked = []
     this.initVis();
@@ -45,13 +45,13 @@ ForceVis.prototype.initVis = function(){
         .attr("width", this.width + this.margin)
         .attr("height", this.height + this.margin)
     
-    this.svg
-        .append("rect")
-        .attr("width", this.width + this.margin)
-        .attr("height", this.height + this.margin)
-        .attr("fill", "white")
-        .style("stroke", "black")
-        .style("stroke-width", "2px")
+    //this.svg
+    //    .append("rect")
+    //    .attr("width", this.width + this.margin)
+    //    .attr("height", this.height + this.margin)
+    //    .attr("fill", "white")
+    //    .style("stroke", "black")
+    //    .style("stroke-width", "2px")
     
     this.svg.style()
         //.style("background", "lightgray")
@@ -95,7 +95,7 @@ ForceVis.prototype.initVis = function(){
     this.radScale = d3.scale.pow()
         .exponent(0.1)
         .domain([minWin, maxWin])
-        .range([5,20])
+        .range([10,25])
     var opacityScale = d3.scale.pow()
         .exponent(0.1)
         .domain([minWin, maxWin])
@@ -173,35 +173,7 @@ ForceVis.prototype.initVis = function(){
         //    
         //})
         .on("click", function(d){
-            // var index = that.clicked.indexOf(d)
-            // if (index != -1) {
-            //     that.clicked.splice(index,1)
-            // }
-            // else {
-            //     that.clicked.push(d)
-            // }
-            
-            // if (that.clicked.length > 5) {
-            //     that.clicked.splice(0,1)
-            // }
-            
-            // that.force
-            //     .charge(function(d, i) { return (that.clicked.indexOf(d) != -1) ? -3000/that.clicked.length : 0; })
-            //     .links(createLinks(that.clicked))
-            
-            // that.force.start()
-            
-            // that.selectedChamps.remove()
-            
-            // that.selectedChamps = that.displayer.selectAll(".selected")
-            //     .data(that.clicked)
-            //     .enter().append("text")
-            //     .attr("class", "selected")
-            //     .attr("x", 20)
-            //     .attr("y", function(d,i){return 30 * i + 60})
-            //     .text(function(d,i){return (i+1) + ". " + that.metaData.champions[d.id]})
-            
-            // selectedChampsChange()
+
             that.click_ele(d)
         })
 
@@ -224,15 +196,15 @@ ForceVis.prototype.initVis = function(){
         
         that.force.start()
         
-        that.selectedChamps.remove()
-        
-        that.selectedChamps = that.displayer.selectAll(".selected")
-            .data(that.clicked)
-            .enter().append("text")
-            .attr("class", "selected")
-            .attr("x", 20)
-            .attr("y", function(d,i){return 30 * i + 60})
-            .text(function(d,i){return (i+1) + ". " + that.metaData.champions[d.id]})
+        //that.selectedChamps.remove()
+        //
+        //that.selectedChamps = that.displayer.selectAll(".selected")
+        //    .data(that.clicked)
+        //    .enter().append("text")
+        //    .attr("class", "selected")
+        //    .attr("x", 20)
+        //    .attr("y", function(d,i){return 30 * i + 60})
+        //    .text(function(d,i){return (i+1) + ". " + that.metaData.champions[d.id]})
 
         selectedChampsChange()
     }
@@ -275,23 +247,52 @@ ForceVis.prototype.initVis = function(){
     
     
     this.displayer = that.graph.append("g")
-        .attr("transform", "translate(" + (that.width - 180) + "," + (that.height - 200) + ")")
+        .attr("transform", "translate(" + 0 + "," + (that.height - 200) + ")")
               
+    //this.displayer.append("rect")
+    //    .attr("x", 0)
+    //    .attr("y", 0)
+    //    .attr("rx", 10)
+    //    .attr("ry", 10)
+    //    .attr("width", 175)
+    //    .attr("height", 200)
+    //    .attr("fill", "white")
+    //    .style("stroke", "black")
+    //
+    //this.displayer.append("text")
+    //    .attr("x", 20)
+    //    .attr("y", 30)
+    //    .text("Selected Champions")
+    
     this.displayer.append("rect")
         .attr("x", 0)
-        .attr("y", 0)
-        .attr("rx", 20)
-        .attr("ry", 20)
-        .attr("width", 175)
-        .attr("height", 200)
-        .attr("fill", "white")
-        .style("stroke", "black")
+        .attr("y", 205)
+        .attr("width", 100)
+        .attr("height", 24)
+        .attr("fill", "lightgray")
+        .style("cursor", "hand")
+        .on("click", function(){
+            if (that.clicked.length != 0) {
+                that.clicked = that.clicked.slice(0,1)
+                that.click_ele(that.clicked[0])
+            }
+            
+            
+        })
     
     this.displayer.append("text")
-        .attr("x", 20)
-        .attr("y", 30)
-        .text("Selected Champions")
-    
+        .attr("x", 3)
+        .attr("y", 223)
+        .text("Reset Selected")
+        .style("cursor", "hand")
+        .on("click", function(){
+            if (that.clicked.length != 0) {
+                that.clicked = that.clicked.slice(0,1)
+                that.click_ele(that.clicked[0])
+            }
+            
+            
+        })
     this.selectedChamps = that.displayer.selectAll(".selected")
     
     function selectedChampsChange() {

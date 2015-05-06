@@ -1,279 +1,54 @@
 <!DOCTYPE html>
-    <html>
-        <head lang="en">
-            <meta charset="UTF-8">
-            <title>Ultra Rapid Figures</title>
-        
-            <!-- ADD Libraries-->
-            <script src="libs/d3/d3.min.js" charset="utf-8"></script>
-            <script src="http://d3js.org/queue.v1.min.js"></script>
-            <script src="libs/jquery/jquery-2.1.1.min.js" charset="utf-8"></script>
-            <script src="libs/bootstrap/js/bootstrap.min.js" charset="utf-8"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
-        
-        
-            <!--Stylesheets-->
-            <link rel="stylesheet" type="text/css" href="libs/bootstrap/css/bootstrap.min.css">
-        
-            <!-- Get some nice font-->
-            <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
-        
-            <!-- add own vis classes-->
-            <script src = "js/force.js"></script>
-            <script src = "js/item_bar.js"></script>
-            <script src = "js/champ-profiles.js"></script>
-            <script src = "js/KDA.js"></script>
-            <script src = "js/game_duration.js"></script>
-            <script src = "js/win_rate.js"></script>
+    <head lang="en">
+        <meta charset="UTF-8">
+        <title>Ultra Rapid Figures</title>
+    
+        <!-- ADD Libraries-->
+        <script src="libs/d3/d3.min.js" charset="utf-8"></script>
+        <script src="http://d3js.org/queue.v1.min.js"></script>
+        <script src="libs/jquery/jquery-2.1.1.min.js" charset="utf-8"></script>
+        <script src="libs/bootstrap/js/bootstrap.min.js" charset="utf-8"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+    
+    
+        <!--Stylesheets-->
+        <link rel="stylesheet" type="text/css" href="libs/bootstrap/css/bootstrap.min.css">
+    
+        <!-- Get some nice font-->
+        <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
+    
+        <style>
+            body{
+                    padding-left:20px;
+                    background-color: lightgrey
+                    /*background-image: url("img/lol.jpg");*/
+                    /*background-size: 205px 180px;*/
+                }
 
-            <style>
-                body{padding-left:20px;}
-                .axis path, .axis line {
-                  fill: none;
-                  stroke: #000;
-                  shape-rendering: crispEdges;
-                }
-/*                #force_filter {
-                    position: absolute;
-                    top: 0px;
-                    left: 0px;
-                }
-                #durationArea {
-                    position: absolute;
-                    top: 0px;
-                    left: 850px;
-                }
-                #KDAVis {
-                    position: absolute;
-                    top: 200px;
-                    left: 850px;
-                }
-                #winArea {
-                    position: absolute;
-                    top: 550px;
-                    left: 0px;
-                }*/
-/*                [name=kda_pre] {
-                    display: none;
-                }*/
-            </style>
-            <!-- add own stylesheet-->
-            <!--link rel="stylesheet" type="text/css" href="css/myStyle.css">-->
-        
-        </head>
-        
-        <body>
-            
-            <div class = "row">
-                <div class="col-lg-7" id="force_filter">
-                </div>
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="jumbotron">
+                <!--<h1>Ultra Rapid Figures</h1>-->
+                <img src = "img/urf.png" alt = "urf" width = "1000">
+                <p>
+                    On April 1, 2014, Riot Games, the creators of League of Legends, introduced a radically new game mode called Ultra Rapid Fire (URF), that instantly became a favorite for League fans everywhere. URF was a fast-paced, high-energy game-mode that completely disrupted the delicate order of evenly balanced champions and items found in normal games. Though the game mode was only around for two weeks, Riot re-released it on April 1, 2015 for a limited time only. Ultra Rapid Figures is a d3 visualization that explores the issue of balance in the new URF game mode in League of Legends. It is our intention that, with this visualization as a tool, players will be able to take advantage of the newly-arisen power disparity among champions and dominate their opponents.
+                </p>
+                <iframe width="420" height="315" src="http://www.youtube.com/embed/XGSy3_Czz8k"></iframe>
+                <p>
+                    <a class="btn btn-lg btn-primary" href="vis.html" role="button">Go to Visualization &raquo;</a>
+                </p>
+
                 
-                <div class = "col-lg-5">
-                    <div class = "row">
-                        <div id="durationArea"></div>
-                    </div>
-                    <div class = "row">
-                        <div id = "KDAVis">
-                            <form action="">
-                            <input type="radio" name="kda" value="kills" checked>Kills
-                            <input type="radio" name="kda" value="deaths">Deaths
-                            <input type="radio" name="kda" value="assists">Assists
-                            </form>
-                        </div>
-                    </div>
             </div>
-            <div class = "row">
-                <div class = "col-md-12" id = "winArea">
-                <form action="">
-                <input type="radio" name="win" value="descending" checked>Descending
-                <input type="radio" name="win" value="ascending">Ascending
-                <input type="radio" name="win" value="alphabetical">Alphabetical
-                </form>
-                </div>
-            </div>
-            <div class = "row">
-                <div class = "col-md-12" id = "profileVis"></div>
-            </div>
-            <!--<div id = "force_filter">-->
-            <!--    -->
-            <!--</div>-->
-            <!--<div id = "durationArea">-->
-            <!--    -->
-            <!--</div>-->
-
-            
-            
-            
-            <!--<div id = "KDAVis">-->
-            <!--    <form action="">-->
-            <!--    <input type="radio" name="kda" value="kills" checked>Kills-->
-            <!--    <input type="radio" name="kda" value="deaths">Deaths-->
-            <!--    <input type="radio" name="kda" value="assists">Assists-->
-            <!--    </form>-->
-            <!--</div>-->
-            
-        </body>
-        
-        <script>
-            $(function(){ // this function is called after the HTML document is fully loaded
-    
-    
-                //==========================================
-                //--- HERE IS WHERE ALL THE MAGIC STARTS --
-                //==========================================
-    
-    
-                // variables keeping global knowledge of the data
-                var allData = [];
-                var metaData = {};
-                
-                // this function can convert Date objects to a string
-                // it can also convert strings to Date objects
-                // see: https://github.com/mbostock/d3/wiki/Time-Formatting
-                var dateFormatter = d3.time.format("%Y-%m-%d");
-    
-    
-                // call this function after Data is loaded, reformatted and bound to the variables
-                var initVis = function(){
-    
-                    
-                    var MyEventHandler = new Object();
-                    
-                    var force = new ForceVis(d3.select("#force_filter"), allData, metaData, MyEventHandler);
-                    //var duration_area = new DurationVis(d3.select("durationVis"), allData);
-
-                    var profiles = new ProfileVis(d3.select("#profileVis"), allData, metaData);
-
-                    // var kda_area = new AreaVis(d3.select("kdaAreaVis"), allData)
-                    var MyWinVis = new WinRateVis(d3.select("#winArea"), allData, metaData, MyEventHandler);
-
-                    var kda_options = ['Kills', 'Deaths', 'Assists']
-                    var form = d3.select("#KDAVis")
-                        .append("form")
-                            .attr("action","")
-                    // for (var ele in kda_options) {
-                    //     form
-                    //         .append("input")
-                    //             .attr("type","radio")
-                    //             .attr("name","kda")
-                    //             .attr("value",kda_options[ele].toLowerCase())
-                    //             .text(kda_options[ele])
-                    //             .property("checked",ele==0)
-                           
-                    // }
-                    
-                    var MyKDAVis = new KDAVis(d3.select("#KDAVis"), allData, metaData);
-                    var game_vis = new DurationVis(d3.select("#durationArea"), allData, metaData, MyEventHandler);
-                    
-                    
-                    $(MyEventHandler).bind("selectionChanged", function(event, selected){
-                        MyKDAVis.onSelectionChange(selected);
-                        MyWinVis.onSelectionChange(selected);
-                        profiles.onSelectionChange(selected);
-                    });
-
-                    $(MyEventHandler).bind("clickChange", function(event, selected){
-                        // MyKDAVis.onSelectionChange(selected);
-                        // MyWinVis.onSelectionChange(selected);
-                        // profiles.onSelectionChange(selected);
-                        force.onClickChange(selected);
-                    });
-
-                    $(MyEventHandler).bind("brushed", function(event, start, end){
-                        MyKDAVis.brushChange(start,end);
-                        force.brushChange(start,end);
-                        profiles.brushChange(start,end);
-                        MyWinVis.brushChange(start,end);
-                    });
-
-                    $(MyEventHandler).bind("kdaRadioChange", function(event, selected){
-                        MyKDAVis.kdaRadioChange(selected);
-                    });
-
-                    $(MyEventHandler).bind("winSortChange", function(event, selected){
-                        MyWinVis.winSortChange(selected);
-                    });
-
-                    d3.selectAll("input[type='radio'][name='kda']")
-                        .on("change", function() {
-                            d3.selectAll("input[type='radio'][name='kda']")
-                                .each(function() {
-                                    if(d3.select(this).property("checked")) {
-                                        $(MyEventHandler).trigger("kdaRadioChange", d3.select(this).attr("value"));
-                                    }
-                                })
-                        })
-
-                    d3.selectAll("input[type='radio'][name='win']")
-                        .on("change", function() {
-                            d3.selectAll("input[type='radio'][name='win']")
-                                .each(function() {
-                                    if(d3.select(this).property("checked")) {
-                                        $(MyEventHandler).trigger("winSortChange", d3.select(this).attr("value"));
-                                    }
-                                })
-                        })
-
-    
-                }
-    
-                // call this function after both files are loaded -- error should be "null" if no error
-                var dataLoaded = function (error, _allData, _metaData) {
-                    
-                    
-                    if (!error) {
-    
-                        var newData = []
-                        var keys = Object.keys(_allData)
-                        for (var i = 0; i < keys.length; i ++) {
-                            var temp = _allData[keys[i]]
-                            temp["id"] = keys[i]
-                            newData.push(temp)
-                        }
-                        allData = newData
-                        metaData = _metaData
-                        
-    
-                        initVis();
-                        
-                    }
-                }
-    
-                var startHere = function(){
-    
-                    
-                    queue()
-                        .defer(d3.json, 'data/master_json_small.json')
-                        .defer(d3.json, 'data/meta_data.json')
-                        .await(dataLoaded)
-                    
-                    
-            
-                }
-    
-                startHere();
-            })
             
             
             
             
-            
-            
-            
-            
-        </script>
+        </div>
         
         
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-    </html>
+    </body>
+    

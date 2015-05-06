@@ -47,14 +47,24 @@ WinRateVis.prototype.initVis = function(){
     this.svg = this.parentElement.append("svg")
         .attr("width",this.width)
         .attr("height",this.height)
+	.append("g")
+	.attr("transform", "translate(30,0)")
         //.style("background-color", "lightcoral")
-   
+    
+//    this.svg.append("rect")
+//	.attr("width", this.width)
+//	.attr("height", this.height)
+//	.attr("fill", "white")
+//    
+//	.style("stroke", "black")
+//	.style("stroke-width", "2px")
+    
     //TODO: create axis and scales
     this.x_margin = 50
     this.y_margin = 50
 
     this.x_scale = d3.scale.ordinal()
-        .rangeRoundBands([0 + that.x_margin, that.width - that.x_margin], .1, 0)
+        .rangeRoundBands([that.x_margin, that.width - that.x_margin], .2)
         .domain(that.champNames)
 
     this.y_scale = d3.scale.linear()
@@ -95,7 +105,7 @@ WinRateVis.prototype.initVis = function(){
             that.clickChange(d[1])
         })
         .on("mouseover", function(d) {
-            d3.select(this).style("fill","orange")
+            d3.select(this).style("fill","red")
             //console.log(d)
             that.tooltipGroup.style("display", "initial")
             that.tooltip
@@ -139,11 +149,21 @@ WinRateVis.prototype.initVis = function(){
         .attr("transform", "translate(" + that.x_margin +",0)")
         .call(this.yAxis)
 
-    // this.draw_xAxis = this.svg.append("g")
-    //     .attr("class","x axis")
-    //     .attr("transform", "translate(0," + (that.height - that.y_margin) +")")
-    //     .call(this.xAxis)
 
+    this.svg.append("text")
+        .attr("x", that.width/2)
+        .attr("y", -30)
+	.attr("transform", "translate(0," + that.height + ")")
+        .text("Champions")
+        .style("text-anchor", "middle")
+	
+    this.draw_yAxis.append("text")
+        .attr("x", -that.height/2 - 20)
+        .attr("y", -60)
+        .attr("transform", "rotate(-90)")
+        .text("Win Rate")
+        .style("text-anchor", "middle")
+	
     this.tooltipGroup = this.svg.append("g")
 
     this.tooltip = this.tooltipGroup
@@ -309,7 +329,7 @@ WinRateVis.prototype.updateVis = function(){
         .data(that.displayTuples)
         .transition().duration(500)
         .style("fill",function(d) {return that.color_bar(d)})
-        .attr("x",function(d,i){return isNaN(that.x_scale(d[1])) ? 0: that.x_scale(d[1])})
+        .attr("x",function(d,i){return isNaN(that.x_scale(d[1])) ? 0: that.x_scale(d[1])-40})
         .attr("y",function(d){return isNaN(that.y_scale(d[0])) ? 0 : that.y_scale(d[0])}) //that.y_scale(d)})
         .attr("width", function(d){return isNaN(that.x_scale.rangeBand()) ? 0 : that.x_scale.rangeBand()})
         .attr("height", function(d){return isNaN(that.height - that.y_scale(d[0]) - that.y_margin) ? 0: that.height - that.y_scale(d[0]) - that.y_margin})
