@@ -224,6 +224,15 @@ ProfileVis.prototype.updateVis = function(){
 		}
 		return "img/item/" + d.topItems[x].key + ".png"    
 	    })
+	    .append("title")
+	    .text(function(d){
+		if (d === undefined || d.topItems[x] === undefined) {
+		    return "??";
+		}
+		return that.metaData.items[d.topItems[x].key]
+		
+		
+	    })
 	
     }
     this.summonerTitle = this.profiles
@@ -245,6 +254,16 @@ ProfileVis.prototype.updateVis = function(){
 		    return "img/item/" + 0 + ".png";
 		}
 		return "img/summoners/" + d.topSpells[x].key + ".png"
+	    })
+	    .append("title")
+	    .text(function(d){
+		
+		if (d === undefined || d.topSpells[x] === undefined) {
+		    return "??";
+		}
+		return that.metaData.summoner_spells[d.topSpells[x].key]
+		
+		
 	    })
     }
     that.profiles
