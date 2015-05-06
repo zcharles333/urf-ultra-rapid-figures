@@ -42,7 +42,7 @@ DurationVis.prototype.initVis = function(){
     this.formatMinutes = function(d) { 
         var minutes = Math.floor(d / 60),
             seconds = Math.floor(d - (minutes * 60));
-        var output = ''//seconds + 's';
+        var output = ''
         if (minutes) {
             output = minutes + 'm ' + output;
         }
@@ -173,12 +173,6 @@ DurationVis.prototype.wrangleData= function(){
     
 }
 
-
-
-/**
- * the drawing function - should use the D3 selection, enter, exit
- * @param _options -- only needed if different kinds of updates are needed
- */
 DurationVis.prototype.updateVis = function(){
 
     
@@ -209,16 +203,11 @@ DurationVis.prototype.updateVis = function(){
 
     this.drawYAxis
         .call(that.yAxis)
-    
-    //d3.select(".y.axis").select("path").style("display", "none")
-    //d3.select(".y.axis").select(".tick").style("display", "none")
+
 }
 
 DurationVis.prototype.onSelectionChange= function (selectionStart, selectionEnd){
 
-    // TODO: call wrangle function
-
-    // do nothing -- no update when brushing
 
 
 }

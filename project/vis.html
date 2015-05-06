@@ -12,13 +12,10 @@
             <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
         
         
-            <!--Stylesheets-->
             <link rel="stylesheet" type="text/css" href="libs/bootstrap/css/bootstrap.min.css">
         
-            <!-- Get some nice font-->
             <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
         
-            <!-- add own vis classes-->
             <script src = "js/force.js"></script>
             <script src = "js/item_bar.js"></script>
             <script src = "js/champ-profiles.js"></script>
@@ -36,8 +33,6 @@
                   shape-rendering: crispEdges;
                 }
             </style>
-            <!-- add own stylesheet-->
-            <!--link rel="stylesheet" type="text/css" href="css/myStyle.css">-->
         
         </head>
         
@@ -87,70 +82,28 @@
             <div class = "row">
                 <div class = "col-md-12" id = "profileVis"></div>
             </div>
-            <!--<div id = "force_filter">-->
-            <!--    -->
-            <!--</div>-->
-            <!--<div id = "durationArea">-->
-            <!--    -->
-            <!--</div>-->
-
-            
-            
-            
-            <!--<div id = "KDAVis">-->
-            <!--    <form action="">-->
-            <!--    <input type="radio" name="kda" value="kills" checked>Kills-->
-            <!--    <input type="radio" name="kda" value="deaths">Deaths-->
-            <!--    <input type="radio" name="kda" value="assists">Assists-->
-            <!--    </form>-->
-            <!--</div>-->
             
         </body>
         
         <script>
-            $(function(){ // this function is called after the HTML document is fully loaded
+            $(function(){ 
     
-    
-                //==========================================
-                //--- HERE IS WHERE ALL THE MAGIC STARTS --
-                //==========================================
-    
-    
-                // variables keeping global knowledge of the data
                 var allData = [];
                 var metaData = {};
                 
-                // this function can convert Date objects to a string
-                // it can also convert strings to Date objects
-                // see: https://github.com/mbostock/d3/wiki/Time-Formatting
                 var dateFormatter = d3.time.format("%Y-%m-%d");
     
     
-                // call this function after Data is loaded, reformatted and bound to the variables
                 var initVis = function(){
     
                     
                     var MyEventHandler = new Object();
                     
                     var force = new ForceVis(d3.select("#force_filter"), allData, metaData, MyEventHandler);
-                    //var duration_area = new DurationVis(d3.select("durationVis"), allData);
 
                     var profiles = new ProfileVis(d3.select("#profileVis"), allData, metaData);
 
-                    // var kda_area = new AreaVis(d3.select("kdaAreaVis"), allData)
                     var MyWinVis = new WinRateVis(d3.select("#winArea"), allData, metaData, MyEventHandler);
-
-                    // var kda_options = ['Kills', 'Deaths', 'Assists']
-                    // for (var ele in kda_options) {
-                    //     d3.select("#KDAVis")
-                    //         .append("label")
-                    //         .text(kda_options[ele])
-                    //         .append("input")
-                    //           .attr("type","radio")
-                    //           .attr("name","kda")
-                    //           .attr("value",kda_options[ele].toLowerCase())
-                    //           .property("checked",ele==0)
-                    // }
                     
                     var MyKDAVis = new KDAVis(d3.select("#KDAVis"), allData, metaData);
                     var game_vis = new DurationVis(d3.select("#durationArea"), allData, metaData, MyEventHandler);
@@ -163,9 +116,6 @@
                     });
 
                     $(MyEventHandler).bind("clickChange", function(event, selected){
-                        // MyKDAVis.onSelectionChange(selected);
-                        // MyWinVis.onSelectionChange(selected);
-                        // profiles.onSelectionChange(selected);
                         force.onClickChange(selected);
                     });
 
@@ -207,7 +157,6 @@
     
                 }
     
-                // call this function after both files are loaded -- error should be "null" if no error
                 var dataLoaded = function (error, _allData, _metaData) {
                     
                     
@@ -252,18 +201,6 @@
             
             
         </script>
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
     </html>
