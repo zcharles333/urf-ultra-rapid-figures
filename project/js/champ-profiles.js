@@ -31,7 +31,15 @@ ProfileVis.prototype.initVis = function(){
     this.profileWidth = (that.width - 2*that.margin)/5
     this.profileHeight = that.height - 2*that.margin
     
-   
+    this.initalText = this.graph
+	.append("text")
+	.attr("x", that.width/2)
+	.attr("y", that.height/2)
+	.text("Select Champion to have Profiles Appear Here")
+	.style("text-anchor", "middle")
+	.style("font-size", "30px")
+	
+	
     
     
     // filter, aggregate, modify data
@@ -65,6 +73,7 @@ ProfileVis.prototype.updateVis = function(){
 	    placeholder["unique"]["summoner_spells"] = duration_indices.map(function(d){
 		return that.selected[i].unique.summoner_spells[d]
 	    })
+	    placeholder["popularity"] = that.selected[i].popularity
 	    placeholder["id"] = that.selected[i].id
 	    that.filtered_data.push(placeholder)
 	}
@@ -126,6 +135,12 @@ ProfileVis.prototype.updateVis = function(){
 	    
 	}
     }
+    if (this.filtered_data.length != 0) {
+	that.initalText.style("display", "none")
+    }
+    else {
+	that.initalText.style("display", "initial")
+    }
     
     this.profiles = this.graph.selectAll(".profiles")
 	.data(that.filtered_data)
@@ -133,6 +148,7 @@ ProfileVis.prototype.updateVis = function(){
     this.profiles
 	.enter().append("g")
 	.attr("class",function(d,i){return "profiles " + i;})
+	.style("opacity", "0")
     
     this.rects = this.profiles
 	.append("rect")
@@ -143,6 +159,7 @@ ProfileVis.prototype.updateVis = function(){
 	.attr("height", that.profileHeight)
 	.attr("fill", "white")
 	.attr("stroke", "black")
+	
 	//.style("opacity", "0")
     
     this.images = this.profiles
@@ -152,6 +169,7 @@ ProfileVis.prototype.updateVis = function(){
 	.attr("width", (that.profileWidth-40)/2)
 	.attr("height", (that.profileHeight/2))
 	.attr("xlink:href", function(d){
+	   
 	   
             return "img/profiles/" + that.metaData.champions[d.id].replace(" ", "").replace(".", "") + "_0.jpg"    
         })
@@ -212,7 +230,7 @@ ProfileVis.prototype.updateVis = function(){
 	.append("text")
 	.attr("x", function(d,i){return that.margin + ((that.profileWidth-40)/2)+ i * (that.profileWidth)})
 	.attr("y", "150")
-	.text("Common Summoner Spells")
+	.text("Most Common Summoners")
 	.style("font-size", "10px")
 	
     for (var x = 0; x < 2; x ++ ) {
@@ -229,6 +247,9 @@ ProfileVis.prototype.updateVis = function(){
 		return "img/summoners/" + d.topSpells[x].key + ".png"
 	    })
     }
+    that.profiles
+	.transition().duration(1000)
+	.style("opacity", "1")
     
     that.profiles.exit().remove()
     

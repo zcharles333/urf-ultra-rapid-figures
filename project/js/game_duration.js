@@ -9,7 +9,7 @@ DurationVis = function(_parentElement, _data, _metaData, _eventHandler){
 
     // TODO: define all "constants" here
 
-    this.margin = 70
+    this.margin = 50
     
     this.height = 130
     this.width = 450
@@ -69,6 +69,7 @@ DurationVis.prototype.initVis = function(){
         .scale(that.yScale)
         .outerTickSize([1])
         .orient("left")
+        .tickFormat(function(d){return Math.round(d/1000) + "k"})
         
     this.area = d3.svg.area()
         .x(function(d){return that.xScale(d.key)})
@@ -87,16 +88,29 @@ DurationVis.prototype.initVis = function(){
         .attr("class", "x axis")
         .attr("transform", "translate(" + 0 + "," + that.height + ")")
         
+    this.drawXAxis.append("text")
+        .attr("x", that.width/2 - 30)
+        .attr("y", 50)
+        .text("Game Durations")
+        .style("text-anchor", "middle")
+    
     this.drawYAxis = this.graph
         .append("g")
         .attr("class", "y axis")
     
+    this.drawYAxis.append("text")
+        .attr("x", -that.height/2)
+        .attr("y", -40)
+        .attr("transform", "rotate(-90)")
+        .text("Number of Games")
+        .style("text-anchor", "middle")
+        
     this.title = this.graph.append("text")
         .attr("x", 30)
         .attr("y", "-3")
         .attr("class", "title")
         .style("font-size", "16px")
-        .text("Time Selected: ")
+        .text("Selected Durations: All")
     
     this.brush = d3.svg.brush()
         .x(that.xScale)
@@ -114,9 +128,15 @@ DurationVis.prototype.initVis = function(){
     
         
     function brushed() {
-
-        d3.select(".title")
-            .text("Time Selected: " + that.formatMinutesSeconds(that.brush.extent()[0]) + "->" + that.formatMinutesSeconds(that.brush.extent()[1]))
+        if (that.brush.extent()[0] == that.brush.extent()[1]) {
+            d3.select(".title") 
+            .text("Selected Durations: All")
+        }
+        else {
+            d3.select(".title") 
+                .text("Selected Durations: " + that.formatMinutesSeconds(that.brush.extent()[0]) + "->" + that.formatMinutesSeconds(that.brush.extent()[1]))
+        }
+        
         $(that.eventHandler).trigger("brushed", that.brush.extent())
         
     }
